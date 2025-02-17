@@ -13,10 +13,10 @@ steps:
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'GESDA-ARMPipeline-conn'
+    azureResourceManagerConnection: 'Gesda-ARMPipeline-conn'
     subscriptionId: '3befa360-af61-49c0-8dc1-fe29696b45f7'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: 'GESDA'
+    resourceGroupName: 'ARMPipeline-rg'
     location: 'UK South'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
