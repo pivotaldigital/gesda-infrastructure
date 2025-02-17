@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'GESDA-ARMPipeline-conn'
+    subscriptionId: '3befa360-af61-49c0-8dc1-fe29696b45f7'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'ARMPipeline-rg'
+    location: 'Switzerland North'
+    templateLocation: 'URL of the file'
+    csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
+    overrideParameters: '-projectName GESDA'
+    deploymentMode: 'Incremental'
+    deploymentName: 'GESDAInfrastructureDeploymentPipeline'
