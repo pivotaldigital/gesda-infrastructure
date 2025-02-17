@@ -7,20 +7,20 @@ trigger:
 - main
 
 pool:
-  name: CICD-Pool
   vmImage: ubuntu-latest
 
 steps:
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'GESDA-ARMPipeline-conn'
+    azureResourceManagerConnection: 'Gesda-ARMPipeline-conn'
     subscriptionId: '3befa360-af61-49c0-8dc1-fe29696b45f7'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: 'GESDA'
-    location: 'Switzerland North'
+    resourceGroupName: 'gesda-uk'
+    location: 'UK South'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
-    overrideParameters: '-projectName GESDA'
+    csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.parameters.json'
     deploymentMode: 'Incremental'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
+
