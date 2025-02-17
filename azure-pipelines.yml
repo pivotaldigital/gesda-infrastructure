@@ -20,6 +20,7 @@ steps:
     location: 'UK South'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
-    overrideParameters: '-projectName GESDA'
+    csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.parameters.json'
     deploymentMode: 'Incremental'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
+
