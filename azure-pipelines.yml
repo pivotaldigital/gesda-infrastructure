@@ -17,7 +17,7 @@ steps:
     subscriptionId: '3befa360-af61-49c0-8dc1-fe29696b45f7'
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'GESDA'
-    location: 'Switzerland North'
+    location: 'UK South'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
     overrideParameters: '-projectName GESDA'
