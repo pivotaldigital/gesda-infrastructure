@@ -13,7 +13,7 @@ steps:
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'GESDA-ARMPipeline-conn'
+    azureResourceManagerConnection: 'GESDA(3befa360-af61-49c0-8dc1-fe29696b45f7)'
     subscriptionId: '3befa360-af61-49c0-8dc1-fe29696b45f7'
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'ARMPipeline-rg'
