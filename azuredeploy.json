@@ -26,30 +26,10 @@
     }
   },
   "variables": {
-    "storageAccountName": "[concat(toLower(parameters('projectName')), uniqueString(resourceGroup().id))]",
     "webAppName": "[concat(toLower(parameters('projectName')), 'WebApp')]",
     "appServicePlanName": "[concat(toLower(parameters('projectName')), 'Plan')]"
   },
   "resources": [
-    {
-      "name": "linkedTemplate",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "relativePath": "linkedStorageAccount.json"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
-          },
-          "location": {
-            "value": "[parameters('location')]"
-          }
-        }
-      }
-    },
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2022-09-01",
@@ -86,11 +66,5 @@
         }
       }
     }
-  ],
-  "outputs": {
-    "storageEndpoint": {
-      "type": "object",
-      "value": "[reference('linkedTemplate').outputs.storageEndpoint.value]"
-    }
-  }
+  ]
 }
