@@ -218,9 +218,6 @@
         "registrySku": {
             "value": "Basic"
         },
-        "registryApiVersion": {
-            "value": "2022-02-01-preview"
-        },
         "registryPublicNetworkAccess": {
             "value": "Enabled"
         }
