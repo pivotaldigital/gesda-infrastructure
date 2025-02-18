@@ -313,10 +313,10 @@
     },
     "resources": [
         {
+            "apiVersion": "[variables('registryApiVersion')]",
             "name": "[parameters('registryName')]",
             "type": "Microsoft.ContainerRegistry/registries",
             "location": "[parameters('registryLocation')]",
-            "apiVersion": "[variables('registryApiVersion')]",
             "sku": {
                 "name": "[parameters('registrySku')]"
             },
