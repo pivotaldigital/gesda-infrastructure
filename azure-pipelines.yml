@@ -19,8 +19,8 @@ steps:
     resourceGroupName: 'gesda-uk'
     location: 'UK South'
     templateLocation: 'URL of the file'
-    csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
-    csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.parameters.json'
+    csmFileLink: '$(System.DefaultWorkingDirectory)/azuredeploy.json'
+    csmParametersFileLink: '$(System.DefaultWorkingDirectory)/azuredeploy.parameters.json'
     deploymentMode: 'Validation'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
 - task: AzureResourceManagerTemplateDeployment@3
@@ -32,8 +32,8 @@ steps:
     resourceGroupName: 'gesda-uk'
     location: 'UK South'
     templateLocation: 'URL of the file'
-    csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
-    csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.parameters.json'
+    csmFileLink: '$(System.DefaultWorkingDirectory)/azuredeploy.json'
+    csmParametersFileLink: '$(System.DefaultWorkingDirectory)/azuredeploy.parameters.json'
     deploymentMode: 'Incremental'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
     
