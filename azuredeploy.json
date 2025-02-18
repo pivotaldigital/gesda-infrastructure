@@ -131,8 +131,7 @@
             "type": "string"
         },
         "serverPassword": {
-            "type": "securestring",
-            "defaultValue": "3uiYw9yozWHsSTeU"
+            "type": "securestring"
         },
         "databaseName": {
             "type": "string"
@@ -275,9 +274,58 @@
         "managedIdentityName": {
             "type": "string",
             "defaultValue": "gesda-bc8f815183-wpidentity"
+        },
+        "registryName": {
+            "type": "string"
+        },
+        "registryLocation": {
+            "type": "string"
+        },
+        "zoneRedundancy": {
+            "type": "string"
+        },
+        "registrySku": {
+            "type": "string"
+        },
+        "registryPublicNetworkAccess": {
+            "type": "string"
         }
     },
+    "variables": {
+        "appServicesApiVersion": "2021-03-01",
+        "databaseApiVersion": "2021-12-01-preview",
+        "databaseVersion": "8.0.21",
+        "vnetDeploymentApiVersion": "2020-07-01",
+        "privateDnsApiVersion": "2018-09-01",
+        "vnetAddress": "10.0.0.0/23",
+        "cdnApiVersion": "2020-04-15",
+        "blobApiVersion": "2021-08-01",
+        "storageAccountId": "[resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "emailApiVersion": "2023-03-31",
+        "acsAccountId": "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]",
+        "ecsAccountId": "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailCommServiceName'), 'AzureManagedDomain')]",
+        "acsSenderEmailAddress": "DoNotReply",
+        "resourceDeploymentApiVersion": "2021-04-01",
+        "managedIdentityApiVersion": "2018-11-30",
+        "rbacAuthApiVersion": "2022-04-01",
+        "roleDefinitionsApiVersion": "2022-04-01",
+        "registryApiVersion": "2022-02-01-preview"
+    },
     "resources": [
+        {
+            "name": "[parameters('registryName')]",
+            "type": "Microsoft.ContainerRegistry/registries",
+            "location": "[parameters('registryLocation')]",
+            "apiVersion": "[variables('registryApiVersion')]",
+            "sku": {
+                "name": "[parameters('registrySku')]"
+            },
+            "dependsOn": [],
+            "properties": {
+                "publicNetworkAccess": "[parameters('registryPublicNetworkAccess')]",
+                "zoneRedundancy": "[parameters('zoneRedundancy')]"
+            }
+        },
         {
             "apiVersion": "[variables('appServicesApiVersion')]",
             "name": "[parameters('name')]",
@@ -1569,24 +1617,5 @@
                 }
             }
         }
-    ],
-    "variables": {
-        "appServicesApiVersion": "2021-03-01",
-        "databaseApiVersion": "2021-12-01-preview",
-        "databaseVersion": "8.0.21",
-        "vnetDeploymentApiVersion": "2020-07-01",
-        "privateDnsApiVersion": "2018-09-01",
-        "vnetAddress": "10.0.0.0/23",
-        "cdnApiVersion": "2020-04-15",
-        "blobApiVersion": "2021-08-01",
-        "storageAccountId": "[resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-        "emailApiVersion": "2023-03-31",
-        "acsAccountId": "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]",
-        "ecsAccountId": "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailCommServiceName'), 'AzureManagedDomain')]",
-        "acsSenderEmailAddress": "DoNotReply",
-        "resourceDeploymentApiVersion": "2021-04-01",
-        "managedIdentityApiVersion": "2018-11-30",
-        "rbacAuthApiVersion": "2022-04-01",
-        "roleDefinitionsApiVersion": "2022-04-01"
-    }
+    ]
 }

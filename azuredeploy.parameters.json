@@ -205,6 +205,24 @@
         },
         "managedIdentityName": {
             "value": "gesda-bc8f815183-wpidentity"
+        },
+        "registryName": {
+            "value": "GesdaCR"
+        },
+        "registryLocation": {
+            "value": "uksouth"
+        },
+        "zoneRedundancy": {
+            "value": "disabled"
+        },
+        "registrySku": {
+            "value": "Basic"
+        },
+        "registryApiVersion": {
+            "value": "2022-02-01-preview"
+        },
+        "registryPublicNetworkAccess": {
+            "value": "Enabled"
         }
     }
 }
