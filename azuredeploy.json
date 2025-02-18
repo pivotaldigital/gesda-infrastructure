@@ -143,10 +143,6 @@
         "stagingDatabaseName": {
             "type": "string"
         },
-        "wordpressTitle": {
-            "type": "string",
-            "defaultValue": "WordPress On Azure"
-        },
         "wordpressAdminEmail": {
             "type": "string"
         },

@@ -104,9 +104,6 @@
         "stagingDatabaseName": {
             "value": "gesda_bc8f815183_database_staging"
         },
-        "wordpressTitle": {
-            "value": "WordPress On Azure"
-        },
         "wordpressAdminEmail": {
             "value": "ankit@elatebrain.com"
         },
