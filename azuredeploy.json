@@ -131,7 +131,8 @@
             "type": "string"
         },
         "serverPassword": {
-            "type": "securestring"
+            "type": "securestring",
+            "defaultValue": "3uiYw9yozWHsSTeU"
         },
         "databaseName": {
             "type": "string"
