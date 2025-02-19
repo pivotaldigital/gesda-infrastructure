@@ -591,9 +591,7 @@
             ],
             "properties": {
                 "siteName": "[parameters('name')]",
-                "hostNameType": "Verified",
-                "sslState": "SniEnabled",
-                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]"
+                "hostNameType": "Verified"
             }
         },
         {
