@@ -461,10 +461,6 @@
             "name": "[parameters('name')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('location')]",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "dependsOn": [
                 "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
                 "[concat('Microsoft.DBforMySQL/flexibleServers/', parameters('serverName'))]",
@@ -600,10 +596,6 @@
             "type": "Microsoft.Web/serverfarms",
             "location": "[parameters('location')]",
             "kind": "[parameters('kind')]",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "properties": {
                 "name": "[parameters('hostingPlanName')]",
                 "workerSize": "[parameters('workerSize')]",
@@ -624,22 +616,13 @@
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "[variables('managedIdentityApiVersion')]",
             "name": "[parameters('managedIdentityName')]",
-            "location": "[parameters('location')]",
-            "properties": {},
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            }
+            "location": "[parameters('location')]"
         },
         {
             "apiVersion": "[variables('databaseApiVersion')]",
             "location": "[parameters('location')]",
             "name": "[parameters('serverName')]",
             "type": "Microsoft.DBforMySQL/flexibleServers/",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "properties": {
                 "version": "[variables('databaseVersion')]",
                 "administratorLogin": "[parameters('serverUsername')]",
@@ -786,10 +769,6 @@
             "apiVersion": "[variables('privateDnsApiVersion')]",
             "name": "[parameters('privateDnsZoneNameForDb')]",
             "location": "global",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "resources": [
                 {
                     "type": "virtualNetworkLinks",
@@ -836,10 +815,6 @@
                 "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('stagingBlobContainerName'))]"
             ],
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "kind": "[parameters('kind')]",
             "properties": {
                 "clientAffinityEnabled": false,
@@ -962,10 +937,6 @@
             "apiVersion": "[variables('emailApiVersion')]",
             "name": "[parameters('emailCommServiceName')]",
             "location": "global",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "properties": {
                 "dataLocation": "[parameters('emailDataLocation')]"
             }
@@ -975,10 +946,6 @@
             "apiVersion": "[variables('emailApiVersion')]",
             "name": "[parameters('commServiceName')]",
             "location": "global",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "dependsOn": [
                 "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailCommServiceName'), 'AzureManagedDomain')]"
             ],
@@ -994,10 +961,6 @@
             "apiVersion": "[variables('emailApiVersion')]",
             "name": "[concat(parameters('emailCommServiceName'), '/AzureManagedDomain')]",
             "location": "global",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "dependsOn": [
                 "[resourceId('Microsoft.Communication/emailServices', parameters('emailCommServiceName'))]"
             ],
@@ -1147,10 +1110,6 @@
             "sku": {
                 "name": "[parameters('cdnType')]"
             },
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "properties": {},
             "dependsOn": [
                 "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('serverName'))]"
@@ -1161,10 +1120,6 @@
             "type": "Microsoft.Cdn/profiles/endpoints",
             "name": "[concat(parameters('cdnProfileName'),'/',parameters('cdnEndPointName'))]",
             "location": "Global",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "properties": {
                 "isHttpAllowed": true,
                 "isHttpsAllowed": true,
@@ -1329,10 +1284,6 @@
             "type": "Microsoft.Cdn/profiles/endpoints",
             "name": "[concat(parameters('cdnProfileName'),'/',parameters('stagingCdnEndpointName'))]",
             "location": "Global",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "dependsOn": [
                 "[concat('Microsoft.Cdn/profiles/', parameters('cdnProfileName'))]",
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
@@ -1533,10 +1484,6 @@
                 "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('serverName'))]"
             ],
             "kind": "[parameters('storageAccountKind')]",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "sku": {
                 "name": "[parameters('storageAccountType')]"
             }
