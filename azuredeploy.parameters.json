@@ -66,6 +66,15 @@
                 "ipRules": [],
                 "virtualNetworkRules": []
             }
+        },
+        "kvSecretName": {
+            "value": "gesdaKVSecret"
+        },
+        "kvSecretValue": {
+            "value": "pqakPlMQC5cW2kdpakb4GJjeb8so1PBm"
+        },
+        "certificateName": {
+            "value": "gesdaWebAppCert"
         }
     }
 }
