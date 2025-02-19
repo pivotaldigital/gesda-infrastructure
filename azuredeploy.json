@@ -587,7 +587,8 @@
             ],
             "properties": {
                 "siteName": "[parameters('name')]",
-                "hostNameType": "Verified"
+                "hostNameType": "Verified",
+                "customHostNameDnsRecordType": "CName"
             }
         },
         {
