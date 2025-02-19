@@ -224,9 +224,6 @@
         "kvName": {
             "value": "gesda-kv"
         },
-        "kvLocation": {
-            "value": "uksouth"
-        },
         "kvSku": {
             "value": "Standard"
         },
