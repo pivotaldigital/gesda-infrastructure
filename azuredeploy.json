@@ -445,7 +445,8 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]",
-                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "[resourceId('Microsoft.Web/sites/hostNameBindings', parameters('name'), parameters('domainName'))]"
             ],
             "properties": {
                 "canonicalName": "[parameters('domainName')]",
@@ -583,7 +584,7 @@
         {
             "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2019-08-01",
-            "name": "[concat(parameters('name'), '/', parameters('domainName'))]",
+            "name": "[format('{0}/{1}', parameters('name'), parameters('domainName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites', parameters('name'))]"

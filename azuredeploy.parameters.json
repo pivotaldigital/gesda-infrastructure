@@ -237,7 +237,7 @@
             "value": true
         },
         "kvEnableRbacAuthorization": {
-            "value": true
+            "value": false
         },
         "kvPublicNetworkAccess": {
             "value": "Enabled"
