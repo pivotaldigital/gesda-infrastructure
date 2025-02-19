@@ -289,6 +289,39 @@
         },
         "registryPublicNetworkAccess": {
             "type": "string"
+        },
+        "kvName": {
+            "type": "string"
+        },
+        "kvSku": {
+            "type": "string"
+        },
+        "kvAccessPolicies": {
+            "type": "array"
+        },
+        "kvEnabledForDeployment": {
+            "type": "bool"
+        },
+        "kvEnabledForTemplateDeployment": {
+            "type": "bool"
+        },
+        "kvEnabledForDiskEncryption": {
+            "type": "bool"
+        },
+        "kvEnableRbacAuthorization": {
+            "type": "bool"
+        },
+        "kvPublicNetworkAccess": {
+            "type": "string"
+        },
+        "kvEnableSoftDelete": {
+            "type": "bool"
+        },
+        "kvSoftDeleteRetentionInDays": {
+            "type": "int"
+        },
+        "kvNetworkAcls": {
+            "type": "object"
         }
     },
     "variables": {
@@ -308,7 +341,9 @@
         "managedIdentityApiVersion": "2018-11-30",
         "rbacAuthApiVersion": "2022-04-01",
         "roleDefinitionsApiVersion": "2022-04-01",
-        "registryApiVersion": "2022-02-01-preview"
+        "registryApiVersion": "2022-02-01-preview",
+        "keyVaultApiVersion": "2022-02-01-preview",
+        "tenantId": "[tenant().id]"
     },
     "resources": [
         {
@@ -323,6 +358,30 @@
                 "publicNetworkAccess": "[parameters('registryPublicNetworkAccess')]",
                 "zoneRedundancy": "[parameters('zoneRedundancy')]"
             }
+        },
+        {
+            "apiVersion": "[variables('keyVaultApiVersion')]",
+            "name": "[parameters('kvName')]",
+            "location": "[parameters('location')]",
+            "type": "Microsoft.KeyVault/vaults",
+            "properties": {
+                "enabledForDeployment": "[parameters('kvEnabledForDeployment')]",
+                "enabledForTemplateDeployment": "[parameters('kvEnabledForTemplateDeployment')]",
+                "enabledForDiskEncryption": "[parameters('kvEnabledForDiskEncryption')]",
+                "enableRbacAuthorization": "[parameters('kvEnableRbacAuthorization')]",
+                "accessPolicies": "[parameters('kvAccessPolicies')]",
+                "tenantId": "[variables('tenantId')]",
+                "sku": {
+                    "name": "[parameters('kvSku')]",
+                    "family": "A"
+                },
+                "publicNetworkAccess": "[parameters('kvPublicNetworkAccess')]",
+                "enableSoftDelete": "[parameters('kvEnableSoftDelete')]",
+                "softDeleteRetentionInDays": "[parameters('kvSoftDeleteRetentionInDays')]",
+                "networkAcls": "[parameters('kvNetworkAcls')]"
+            },
+            "tags": {},
+            "dependsOn": []
         },
         {
             "apiVersion": "[variables('appServicesApiVersion')]",

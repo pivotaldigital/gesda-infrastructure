@@ -220,6 +220,47 @@
         },
         "registryPublicNetworkAccess": {
             "value": "Enabled"
+        },
+        "kvName": {
+            "value": "gesda-kv"
+        },
+        "kvLocation": {
+            "value": "uksouth"
+        },
+        "kvSku": {
+            "value": "Standard"
+        },
+        "kvAccessPolicies": {
+            "value": []
+        },
+        "kvEnabledForDeployment": {
+            "value": true
+        },
+        "kvEnabledForTemplateDeployment": {
+            "value": true
+        },
+        "kvEnabledForDiskEncryption": {
+            "value": true
+        },
+        "kvEnableRbacAuthorization": {
+            "value": true
+        },
+        "kvPublicNetworkAccess": {
+            "value": "Enabled"
+        },
+        "kvEnableSoftDelete": {
+            "value": true
+        },
+        "kvSoftDeleteRetentionInDays": {
+            "value": 90
+        },
+        "kvNetworkAcls": {
+            "value": {
+                "defaultAction": "allow",
+                "bypass": "AzureServices",
+                "ipRules": [],
+                "virtualNetworkRules": []
+            }
         }
     }
 }
