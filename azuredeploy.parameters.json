@@ -14,7 +14,7 @@
         "hostingPlanName": {
             "value": "ASP-gesdauk-a1be"
         },
-        "serverFarmResourceGroup": {
+        "targetResourceGroup": {
             "value": "gesda-uk-tmp"
         },
         "ftpsState": {
@@ -139,9 +139,6 @@
         },
         "storageAccountKind": {
             "value": "StorageV2"
-        },
-        "storageAccountResourceGroup": {
-            "value": "gesda-uk"
         },
         "accessTier": {
             "value": "Hot"
