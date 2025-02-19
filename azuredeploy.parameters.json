@@ -2,6 +2,18 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "location": {
+            "value": "UK South"
+        },
+        "vnetName": {
+            "value": "gesda-bc8f815183-vnet"
+        },
+        "subnetForApp": {
+            "value": "gesda-bc8f815183-appsubnet"
+        },
+        "subnetForDb": {
+            "value": "gesda-bc8f815183-dbsubnet"
+        },
         "registryName": {
             "value": "GesdaCR"
         },
