@@ -694,7 +694,7 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('privateDnsZoneNameForDb'), format('{0}-vnetlink', parameters('privateDnsZoneNameForDb')))]"
+                "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('privateDnsZoneNameForDb'), concat(parameters('privateDnsZoneNameForDb'), '-vnetlink'))]"
             ]
         },
         {
