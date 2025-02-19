@@ -338,8 +338,8 @@
                 "[concat('Microsoft.DBforMySQL/flexibleServers/', parameters('serverName'))]",
                 "[concat('Microsoft.DBforMySQL/flexibleServers/', parameters('serverName'), '/databases/', parameters('databaseName'))]",
                 "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]",
-                "[resourceId('Microsoft.DBforMySQL/flexibleServers/configurations', format('{0}/{1}', parameters('serverName'), 'aad_auth_only'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', concat(parameters('storageAccountName'), '/default/', parameters('blobContainerName')))]"
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers/configurations', parameters('serverName'), 'aad_auth_only')]",
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('blobContainerName'))]"
             ],
             "properties": {
                 "name": "[parameters('name')]",
@@ -523,7 +523,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('privateDnsZoneNameForDb'), format('{0}-vnetlink', parameters('privateDnsZoneNameForDb')))]",
                 "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets/', format('{0}/{1}',parameters('vnetName'), parameters('subnetForDb')))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets/', parameters('vnetName'), parameters('subnetForDb'))]"
             ],
             "identity": {
                 "type": "UserAssigned",
@@ -561,7 +561,7 @@
             "apiVersion": "[variables('databaseApiVersion')]",
             "dependsOn": [
                 "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('serverName'))]",
-                "[resourceId('Microsoft.DBforMySQL/flexibleServers/administrators', concat(parameters('serverName'),'/ActiveDirectory'))]"
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers/administrators', parameters('serverName'),'ActiveDirectory')]"
             ],
             "properties": {
                 "value": "ON"
@@ -682,7 +682,7 @@
             ],
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets/', format('{0}/{1}',parameters('vnetName'), parameters('subnetForDb')))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets/', parameters('vnetName'), parameters('subnetForDb'))]"
             ]
         },
         {
@@ -717,10 +717,10 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
                 "[resourceId('Microsoft.Web/sites/config', parameters('name'), 'web')]",
-                "[resourceId('Microsoft.DBforMySQL/flexibleServers/databases', format('{0}/{1}', parameters('serverName'), parameters('stagingDatabaseName') ))]",
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers/databases', parameters('serverName'), parameters('stagingDatabaseName'))]",
                 "[resourceId('Microsoft.Web/sites/networkConfig', parameters('name'), 'virtualNetwork')]",
                 "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', concat(parameters('storageAccountName'), '/default/', parameters('stagingBlobContainerName')))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('stagingBlobContainerName'))]"
             ],
             "tags": {
                 "AppProfile": "Wordpress",
@@ -1205,7 +1205,7 @@
             "dependsOn": [
                 "[concat('Microsoft.Cdn/profiles/', parameters('cdnProfileName'))]",
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', concat(parameters('storageAccountName'), '/default/', parameters('blobContainerName')))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('blobContainerName'))]"
             ]
         },
         {
@@ -1220,7 +1220,7 @@
             "dependsOn": [
                 "[concat('Microsoft.Cdn/profiles/', parameters('cdnProfileName'))]",
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', concat(parameters('storageAccountName'), '/default/', parameters('blobContainerName')))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('blobContainerName'))]",
                 "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
             ],
             "properties": {
@@ -1463,7 +1463,7 @@
                 "publicAccess": "[parameters('blobPublicAccessLevel')]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', concat(parameters('storageAccountName'), '/default'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]"
             ]
         },
         {
@@ -1471,7 +1471,7 @@
             "apiVersion": "[variables('blobApiVersion')]",
             "name": "[concat(parameters('storageAccountName'), '/default/', parameters('stagingBlobContainerName'))]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', concat(parameters('storageAccountName'), '/default/', parameters('blobContainerName')))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('blobContainerName'))]"
             ],
             "properties": {
                 "immutableStorageWithVersioning": {
