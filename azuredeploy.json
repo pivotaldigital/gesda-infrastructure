@@ -604,7 +604,6 @@
                 "WordPressDeploymentID": "gesda-bc8f815183"
             },
             "properties": {
-                "mode": "Incremental",
                 "addressSpace": {
                     "addressPrefixes": [
                         "[variables('vnetAddress')]"
