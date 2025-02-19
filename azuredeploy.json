@@ -668,8 +668,7 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('privateDnsZoneNameForDb'), format('{0}-vnetlink', parameters('privateDnsZoneNameForDb')))]",
-                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets/', parameters('vnetName'), parameters('subnetForDb'))]"
+                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]"
             ],
             "identity": {
                 "type": "UserAssigned",
@@ -810,8 +809,7 @@
                 }
             ],
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets/', parameters('vnetName'), parameters('subnetForDb'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
             ]
         },
         {
