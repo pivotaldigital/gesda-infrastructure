@@ -264,6 +264,9 @@
         },
         "certificateName": {
             "value": "gesdaWebAppCert"
+        },
+        "domainName": {
+            "value": "gesda.pivotal.digital"
         }
     }
 }

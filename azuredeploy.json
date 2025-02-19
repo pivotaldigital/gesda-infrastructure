@@ -330,6 +330,9 @@
             "metadata": {
                 "description": "User friendly certificate resource name"
             }
+        },
+        "domainName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -445,7 +448,7 @@
                 "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             ],
             "properties": {
-                "canonicalName": "gesda.pivotal.digital",
+                "canonicalName": "[parameters('domainName')]",
                 "domainValidationMethod": "http-token",
                 "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]",
                 "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]",
@@ -575,6 +578,21 @@
                 "UserAssignedIdentities": {
                     "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]": {}
                 }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2019-08-01",
+            "name": "[concat(parameters('name'), '/', parameters('domainName'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('name'))]"
+            ],
+            "properties": {
+                "siteName": "[parameters('name')]",
+                "hostNameType": "Verified",
+                "sslState": "SniEnabled",
+                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]"
             }
         },
         {
@@ -727,59 +745,43 @@
             "apiVersion": "[variables('vnetDeploymentApiVersion')]",
             "location": "[parameters('location')]",
             "name": "[parameters('vnetName')]",
-            "tags": {
-                "AppProfile": "Wordpress",
-                "WordPressDeploymentID": "gesda-bc8f815181"
-            },
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
                         "[variables('vnetAddress')]"
                     ]
                 },
-                "subnets": []
-            },
-            "dependsOn": []
-        },
-        {
-            "condition": true,
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2021-03-01",
-            "name": "[format('{0}/{1}', parameters('vnetName'), parameters('subnetForApp'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
-            ],
-            "properties": {
-                "addressPrefix": "10.0.0.0/25",
-                "delegations": [
+                "subnets": [
                     {
-                        "name": "dlg-appService",
+                        "name": "[parameters('subnetForApp')]",
                         "properties": {
-                            "serviceName": "Microsoft.Web/serverFarms"
+                            "addressPrefix": "10.0.0.0/25",
+                            "delegations": [
+                                {
+                                    "name": "dlg-appService",
+                                    "properties": {
+                                        "serviceName": "Microsoft.Web/serverFarms"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnetForDb')]",
+                        "properties": {
+                            "addressPrefix": "10.0.1.0/25",
+                            "delegations": [
+                                {
+                                    "name": "dlg-appService",
+                                    "properties": {
+                                        "serviceName": "Microsoft.DBforMySQL/flexibleServers"
+                                    }
+                                }
+                            ]
                         }
                     }
                 ]
             }
-        },
-        {
-            "condition": true,
-            "type": "Microsoft.Network/virtualNetworks/subnets",
-            "apiVersion": "2021-03-01",
-            "name": "[format('{0}/{1}',parameters('vnetName'), parameters('subnetForDb'))]",
-            "properties": {
-                "addressPrefix": "10.0.1.0/25",
-                "delegations": [
-                    {
-                        "name": "dlg-appService",
-                        "properties": {
-                            "serviceName": "Microsoft.DBforMySQL/flexibleServers"
-                        }
-                    }
-                ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetForApp'))]"
-            ]
         },
         {
             "type": "Microsoft.Network/privateDnsZones",
