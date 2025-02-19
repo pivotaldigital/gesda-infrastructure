@@ -694,20 +694,8 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('privateDnsZoneNameForDb'), concat(parameters('privateDnsZoneNameForDb'), '-vnetlink'))]"
+                "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('privateDnsZoneNameForDb'), format('{0}-vnetlink', parameters('privateDnsZoneNameForDb')))]"
             ]
-        },
-        {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "[variables('appServicesApiVersion')]",
-            "name": "[concat(parameters('name'), '/web')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Web/sites/networkConfig', parameters('name'), 'virtualNetwork')]"
-            ],
-            "properties": {
-                "alwaysOn": "[parameters('alwaysOn')]"
-            }
         },
         {
             "type": "Microsoft.Web/sites/slots",
@@ -936,9 +924,11 @@
             "name": "[concat(parameters('name'), '/web')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]"
+                "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]",
+                "[resourceId('Microsoft.Web/sites/networkConfig', parameters('name'), 'virtualNetwork')]"
             ],
             "properties": {
+                "alwaysOn": "[parameters('alwaysOn')]",
                 "appSettings": [
                     {
                         "name": "DOCKER_REGISTRY_SERVER_URL",
