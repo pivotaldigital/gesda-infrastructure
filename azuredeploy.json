@@ -113,7 +113,40 @@
                 "enabledForTemplateDeployment": "[parameters('kvEnabledForTemplateDeployment')]",
                 "enabledForDiskEncryption": "[parameters('kvEnabledForDiskEncryption')]",
                 "enableRbacAuthorization": "[parameters('kvEnableRbacAuthorization')]",
-                "accessPolicies": "[parameters('kvAccessPolicies')]",
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "182dc11c-5d0e-4fcc-8dd9-a7accff0d248",
+                        "permissions": {
+                            "secrets": [
+                                "get",
+                                "list",
+                                "set"
+                            ],
+                            "certificates": [
+                                "get",
+                                "list",
+                                "create"
+                            ]
+                        }
+                    },
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "bb9a7bd2-36da-4efa-9745-8a2420410f8f",
+                        "permissions": {
+                            "secrets": [
+                                "get",
+                                "list",
+                                "set"
+                            ],
+                            "certificates": [
+                                "get",
+                                "list",
+                                "create"
+                            ]
+                        }
+                    }
+                ],
                 "tenantId": "[variables('tenantId')]",
                 "sku": {
                     "name": "[parameters('kvSku')]",
