@@ -12,7 +12,7 @@
             "value": "UK South"
         },
         "hostingPlanName": {
-            "value": "ASP-gesdauk-a3be"
+            "value": "ASP-gesdauk-a1be"
         },
         "serverFarmResourceGroup": {
             "value": "gesda-uk-tmp"
@@ -129,10 +129,10 @@
             "value": "gesda-bc8f815181-endpoint-staging"
         },
         "storageAccountName": {
-            "value": "gesdabc8f815183"
+            "value": "gesdabc8f815181"
         },
         "blobContainerName": {
-            "value": "blobgesdabc8f815183"
+            "value": "blobgesdabc8f815181"
         },
         "storageAccountType": {
             "value": "Standard_RAGRS"
@@ -180,7 +180,7 @@
             "value": "blob"
         },
         "stagingBlobContainerName": {
-            "value": "blobgesdabc8f815183staging"
+            "value": "blobgesdabc8f815181staging"
         },
         "vnetName": {
             "value": "gesda-bc8f815181-vnet"
