@@ -148,7 +148,7 @@
             "location": "[parameters('location')]",
             "properties": {
                 "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]",
-                "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', concat(parameters('kvName'), '-secret'))]"
+                "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]"
             }
         },
         {
