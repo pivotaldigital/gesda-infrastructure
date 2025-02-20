@@ -17,6 +17,7 @@ steps:
     Destination: 'AzureBlob'
     storage: 'gesdatemplatestorage'
     ContainerName: 'infrastructure-templates'
+    resourceGroup: 'DefaultResourceGroup-NEU'
   name: AzureFileCopy
 
 - task: AzureResourceManagerTemplateDeployment@3
