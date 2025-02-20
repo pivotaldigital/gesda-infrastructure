@@ -922,7 +922,7 @@
                                 {
                                     "name": "dlg-appService",
                                     "properties": {
-                                        "serviceName": "Microsoft.DBforMySQL/flexibleServers"
+                                        "serviceName": "Microsoft.Network/applicationGateways"
                                     }
                                 }
                             ]
@@ -931,7 +931,7 @@
                     {
                         "name": "[parameters('subnetForApp')]",
                         "properties": {
-                            "addressPrefix": "10.0.1.0/24",
+                            "addressPrefix": "10.0.0.128/25",
                             "delegations": [
                                 {
                                     "name": "dlg-appService",
@@ -945,7 +945,7 @@
                     {
                         "name": "[parameters('subnetForDb')]",
                         "properties": {
-                            "addressPrefix": "10.0.2.0/23",
+                            "addressPrefix": "10.0.1.0/25",
                             "delegations": [
                                 {
                                     "name": "dlg-appService",
