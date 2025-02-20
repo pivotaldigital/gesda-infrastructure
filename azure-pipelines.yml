@@ -13,11 +13,11 @@ steps:
 - task: AzureFileCopy@4
   inputs:
     SourcePath: 'templates'
-    azureSubscription: 'azure-storage-connection'
+    azureSubscription: 'Gesda-ARMPipeline-conn'
     Destination: 'AzureBlob'
-    storage: 'storelrqgctp7cfjlc'
+    storage: 'gesdatemplatestorage'
     ContainerName: 'infrastructure-templates'
-    resourceGroup: 'DefaultResourceGroup-NEU'
+    BlobPrefix: 'gesda/'
   name: AzureFileCopy
 
 - task: AzureResourceManagerTemplateDeployment@3
