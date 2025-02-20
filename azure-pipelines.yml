@@ -16,7 +16,7 @@ steps:
     azureSubscription: 'Gesda-ARMPipeline-conn'
     Destination: 'AzureBlob'
     storage: 'gesdatemplatestorage'
-    ContainerName: 'InfrastructureTemplates'
+    ContainerName: 'infrastructure-templates'
   name: AzureFileCopy
 
 - task: AzureResourceManagerTemplateDeployment@3
@@ -25,7 +25,7 @@ steps:
     azureResourceManagerConnection: 'Gesda-ARMPipeline-conn'
     subscriptionId: '3befa360-af61-49c0-8dc1-fe29696b45f7'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: 'DefaultResourceGroup-NEU'
+    resourceGroupName: 'gesda-uk'
     location: 'UK South'
     templateLocation: 'URL of the file'
     csmFileLink: '$(AzureFileCopy.StorageContainerUri)templates/azuredeploy.json$(AzureFileCopy.StorageContainerSasToken)'
