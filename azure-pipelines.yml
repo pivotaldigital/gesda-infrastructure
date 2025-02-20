@@ -15,7 +15,7 @@ steps:
     SourcePath: 'templates'
     azureSubscription: 'azure-storage-connection'
     Destination: 'AzureBlob'
-    storage: 'gesdatemplatestorage'
+    storage: 'storelrqgctp7cfjlc'
     ContainerName: 'infrastructure-templates'
     resourceGroup: 'DefaultResourceGroup-NEU'
   name: AzureFileCopy
