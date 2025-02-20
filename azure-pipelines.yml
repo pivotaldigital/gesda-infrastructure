@@ -10,7 +10,7 @@ pool:
   vmImage: windows-latest
 
 steps:
-- task: AzureFileCopy@6
+- task: AzureFileCopy@4
   inputs:
     SourcePath: 'templates'
     azureSubscription: 'Gesda-ARMPipeline-conn'
@@ -28,7 +28,7 @@ steps:
     resourceGroupName: 'DefaultResourceGroup-NEU'
     location: 'UK South'
     templateLocation: 'URL of the file'
-    csmFileLink: '$(AzureFileCopy.StorageContainerUri)/templates/azuredeploy.json$(AzureFileCopy.StorageContainerSasToken)'
-    csmParametersFileLink: '$(AzureFileCopy.StorageContainerUri)/templates/azuredeploy.parameters.json$(AzureFileCopy.StorageContainerSasToken)'
+    csmFileLink: '$(AzureFileCopy.StorageContainerUri)templates/azuredeploy.json$(AzureFileCopy.StorageContainerSasToken)'
+    csmParametersFileLink: '$(AzureFileCopy.StorageContainerUri)templates/azuredeploy.parameters.json$(AzureFileCopy.StorageContainerSasToken)'
     deploymentMode: 'Validation'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
