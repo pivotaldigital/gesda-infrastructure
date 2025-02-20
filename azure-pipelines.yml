@@ -10,14 +10,13 @@ pool:
   vmImage: windows-latest
 
 steps:
-- task: AzureFileCopy@5
+- task: AzureFileCopy@4
   inputs:
     SourcePath: 'templates'
     azureSubscription: 'azure-storage-connection'
     Destination: 'AzureBlob'
     storage: 'gesdatemplatestorage'
     ContainerName: 'infrastructure-templates'
-    AdditionalArgumentsForBlobCopy: --recursive=true
   name: AzureFileCopy
 
 - task: AzureResourceManagerTemplateDeployment@3
