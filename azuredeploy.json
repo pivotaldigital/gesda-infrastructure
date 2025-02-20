@@ -325,6 +325,12 @@
         "kvSecretValue": {
             "type": "securestring"
         },
+        "kvStagingSecretName": {
+            "type": "string"
+        },
+        "kvStagingSecretValue": {
+            "type": "securestring"
+        },
         "certificateName": {
             "type": "string",
             "metadata": {
@@ -332,6 +338,9 @@
             }
         },
         "domainName": {
+            "type": "string"
+        },
+        "stagingDomainName": {
             "type": "string"
         }
     },
@@ -439,6 +448,17 @@
             }
         },
         {
+            "apiVersion": "[variables('keyVaultApiVersion')]",
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "name": "[format('{0}/{1}', parameters('kvName'), parameters('kvStagingSecretName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]"
+            ],
+            "properties": {
+                "value": "[parameters('kvStagingSecretValue')]"
+            }
+        },
+        {
             "type": "Microsoft.Web/certificates",
             "name": "[parameters('certificateName')]",
             "apiVersion": "2021-02-01",
@@ -453,6 +473,24 @@
                 "domainValidationMethod": "http-token",
                 "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]",
                 "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Web/certificates",
+            "name": "[format('{0}-{1}', parameters('certificateName'), 'staging')]",
+            "apiVersion": "2021-02-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "[resourceId('Microsoft.Web/sites/hostNameBindings', parameters('name'), parameters('stagingDomainName'))]"
+            ],
+            "properties": {
+                "canonicalName": "[parameters('stagingDomainName')]",
+                "domainValidationMethod": "http-token",
+                "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]",
+                "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             }
         },
@@ -587,6 +625,20 @@
             ],
             "properties": {
                 "siteName": "[parameters('name')]",
+                "hostNameType": "Verified",
+                "customHostNameDnsRecordType": "CName"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2019-08-01",
+            "name": "[format('{0}/{1}', parameters('name'), parameters('stagingDomainName'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
+            ],
+            "properties": {
+                "siteName": "[concat(parameters('name'), '/staging')]",
                 "hostNameType": "Verified",
                 "customHostNameDnsRecordType": "CName"
             }
