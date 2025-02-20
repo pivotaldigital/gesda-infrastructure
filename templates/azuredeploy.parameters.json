@@ -188,6 +188,9 @@
         "subnetForDb": {
             "value": "gesda-bc8f815181-dbsubnet"
         },
+        "subnetForAg": {
+            "value": "gesda-bc8f815181-agsubnet"
+        },
         "privateDnsZoneNameForDb": {
             "value": "gesda-bc8f815181-privatelink.mysql.database.azure.com"
         },

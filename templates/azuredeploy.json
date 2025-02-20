@@ -251,6 +251,10 @@
             "type": "string",
             "defaultValue": "gesda-bc8f815181-dbsubnet"
         },
+        "subnetForAg": {
+            "type": "string",
+            "defaultValue": "gesda-bc8f815181-agsubnet"
+        },
         "privateDnsZoneNameForDb": {
             "type": "string",
             "defaultValue": "gesda-bc8f815181-privatelink.mysql.database.azure.com"
@@ -350,7 +354,9 @@
         "databaseVersion": "8.0.21",
         "vnetDeploymentApiVersion": "2020-07-01",
         "privateDnsApiVersion": "2018-09-01",
-        "vnetAddress": "10.0.0.0/23",
+        "publicIPAddressName": "[concat(parameters('name'),'-pip')]",
+        "applicationGatewayName": "[concat(parameters('name'),'-agw')]",
+        "vnetAddress": "10.0.0.0/16",
         "cdnApiVersion": "2020-04-15",
         "blobApiVersion": "2021-08-01",
         "storageAccountId": "[resourceId(parameters('targetResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
@@ -554,14 +560,6 @@
                         {
                             "name": "DATABASE_USERNAME",
                             "value": "[parameters('managedIdentityName')]"
-                        },
-                        {
-                            "name": "CDN_ENABLED",
-                            "value": "true"
-                        },
-                        {
-                            "name": "CDN_ENDPOINT",
-                            "value": "[concat(parameters('cdnEndPointName'),'.azureedge.net')]"
                         },
                         {
                             "name": "BLOB_STORAGE_ENABLED",
@@ -775,6 +773,136 @@
             }
         },
         {
+            "apiVersion": "2020-05-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            },
+            "sku": {
+                "name": "Standard"
+            }
+        },
+        {
+            "apiVersion": "2020-05-01",
+            "name": "[variables('applicationGatewayName')]",
+            "type": "Microsoft.Network/applicationGateways",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+                "[resourceId('Microsoft.Web/sites/', parameters('name'))]"
+            ],
+            "properties": {
+                "sku": {
+                    "name": "Standard_v2",
+                    "tier": "Standard_v2",
+                    "capacity": 2
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayIpConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetForAg'))]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "appGatewayFrontendIP",
+                        "properties": {
+                            "PublicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "appGatewayFrontendPort",
+                        "properties": {
+                            "Port": 80
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "appGatewayBackendPool",
+                        "properties": {
+                            "BackendAddresses": [
+                                {
+                                    "IpAddress": "[reference(parameters('name')).defaultHostName]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "appGatewayBackendHttpSettings",
+                        "properties": {
+                            "Port": 80,
+                            "Protocol": "Http",
+                            "CookieBasedAffinity": "Disabled",
+                            "PickHostNameFromBackendAddress": true,
+                            "ProbeEnabled": true,
+                            "Probe": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'Probe1')]"
+                            }
+                        }
+                    }
+                ],
+                "httpListeners": [
+                    {
+                        "name": "appGatewayHttpListener",
+                        "properties": {
+                            "FrontendIPConfiguration": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations/',variables('applicationGatewayName'), 'appGatewayFrontendIP')]"
+                            },
+                            "FrontendPort": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/',variables('applicationGatewayName'), 'appGatewayFrontendPort')]"
+                            },
+                            "Protocol": "Http"
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "Name": "rule1",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/',variables('applicationGatewayName'), 'appGatewayHttpListener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/',variables('applicationGatewayName'), 'appGatewayBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/',variables('applicationGatewayName'), 'appGatewayBackendHttpSettings')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "Name": "Probe1",
+                        "properties": {
+                            "Protocol": "Http",
+                            "Path": "/",
+                            "Interval": 30,
+                            "Timeout": 10,
+                            "UnhealthyThreshold": 3,
+                            "MinServers": 0,
+                            "PickHostNameFromBackendHttpSettings": true
+                        }
+                    }
+                ]
+            }
+        },
+        {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "[variables('vnetDeploymentApiVersion')]",
             "location": "[parameters('location')]",
@@ -787,9 +915,23 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnetForApp')]",
+                        "name": "[parameters('subnetForAg')]",
                         "properties": {
                             "addressPrefix": "10.0.0.0/25",
+                            "delegations": [
+                                {
+                                    "name": "dlg-appService",
+                                    "properties": {
+                                        "serviceName": "Microsoft.DBforMySQL/flexibleServers"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnetForApp')]",
+                        "properties": {
+                            "addressPrefix": "10.0.1.0/24",
                             "delegations": [
                                 {
                                     "name": "dlg-appService",
@@ -803,7 +945,7 @@
                     {
                         "name": "[parameters('subnetForDb')]",
                         "properties": {
-                            "addressPrefix": "10.0.1.0/25",
+                            "addressPrefix": "10.0.1.0/23",
                             "delegations": [
                                 {
                                     "name": "dlg-appService",
@@ -918,14 +1060,6 @@
                         {
                             "name": "DATABASE_USERNAME",
                             "value": "[parameters('managedIdentityName')]"
-                        },
-                        {
-                            "name": "CDN_ENABLED",
-                            "value": "true"
-                        },
-                        {
-                            "name": "CDN_ENDPOINT",
-                            "value": "[concat(parameters('stagingCdnEndpointName'),'.azureedge.net')]"
                         },
                         {
                             "name": "BLOB_STORAGE_ENABLED",
@@ -1117,14 +1251,6 @@
                         "value": "[parameters('managedIdentityName')]"
                     },
                     {
-                        "name": "CDN_ENABLED",
-                        "value": "true"
-                    },
-                    {
-                        "name": "CDN_ENDPOINT",
-                        "value": "[concat(parameters('cdnEndPointName'),'.azureedge.net')]"
-                    },
-                    {
                         "name": "BLOB_STORAGE_ENABLED",
                         "value": "true"
                     },
@@ -1153,348 +1279,6 @@
                         "value": "true"
                     }
                 ]
-            }
-        },
-        {
-            "apiVersion": "[variables('cdnApiVersion')]",
-            "type": "Microsoft.Cdn/profiles",
-            "name": "[parameters('cdnProfileName')]",
-            "location": "Global",
-            "sku": {
-                "name": "[parameters('cdnType')]"
-            },
-            "properties": {},
-            "dependsOn": [
-                "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('serverName'))]"
-            ]
-        },
-        {
-            "apiVersion": "[variables('cdnApiVersion')]",
-            "type": "Microsoft.Cdn/profiles/endpoints",
-            "name": "[concat(parameters('cdnProfileName'),'/',parameters('cdnEndPointName'))]",
-            "location": "Global",
-            "properties": {
-                "isHttpAllowed": true,
-                "isHttpsAllowed": true,
-                "isCompressionEnabled": true,
-                "contentTypesToCompress": [
-                    "application/eot",
-                    "application/font",
-                    "application/font-sfnt",
-                    "application/javascript",
-                    "application/json",
-                    "application/opentype",
-                    "application/otf",
-                    "application/pkcs7-mime",
-                    "application/truetype",
-                    "application/ttf",
-                    "application/vnd.ms-fontobject",
-                    "application/xhtml+xml",
-                    "application/xml",
-                    "application/xml+rss",
-                    "application/x-font-opentype",
-                    "application/x-font-truetype",
-                    "application/x-font-ttf",
-                    "application/x-httpd-cgi",
-                    "application/x-javascript",
-                    "application/x-mpegurl",
-                    "application/x-opentype",
-                    "application/x-otf",
-                    "application/x-perl",
-                    "application/x-ttf",
-                    "font/eot",
-                    "font/ttf",
-                    "font/otf",
-                    "font/opentype",
-                    "image/svg+xml",
-                    "text/css",
-                    "text/csv",
-                    "text/html",
-                    "text/javascript",
-                    "text/js",
-                    "text/plain",
-                    "text/richtext",
-                    "text/tab-separated-values",
-                    "text/xml",
-                    "text/x-script",
-                    "text/x-component",
-                    "text/x-java-source"
-                ],
-                "origins": [
-                    {
-                        "name": "gesda-b7dggsh7h2ftavby-uksouth-01-azurewebsites-net",
-                        "properties": {
-                            "hostName": "gesda-b7dggsh7h2ftavby.uksouth-01.azurewebsites.net",
-                            "httpPort": 80,
-                            "httpsPort": 443,
-                            "originHostHeader": "gesda-b7dggsh7h2ftavby.uksouth-01.azurewebsites.net",
-                            "priority": 1,
-                            "weight": 1000,
-                            "enabled": true
-                        }
-                    },
-                    {
-                        "name": "gesdabc8f815181-blob-core-windows-net",
-                        "properties": {
-                            "hostName": "gesdabc8f815181.blob.core.windows.net",
-                            "httpPort": 80,
-                            "httpsPort": 443,
-                            "originHostHeader": "gesdabc8f815181.blob.core.windows.net",
-                            "priority": 1,
-                            "weight": 1000,
-                            "enabled": true
-                        }
-                    }
-                ],
-                "originGroups": [
-                    {
-                        "name": "blob-origin-group",
-                        "properties": {
-                            "origins": [
-                                {
-                                    "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/origins', parameters('cdnProfileName'), parameters('cdnEndPointName'), 'gesdabc8f815181-blob-core-windows-net')]"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "app-origin-group",
-                        "properties": {
-                            "origins": [
-                                {
-                                    "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/origins', parameters('cdnProfileName'), parameters('cdnEndPointName'), 'gesda-b7dggsh7h2ftavby-uksouth-01-azurewebsites-net')]"
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "defaultOriginGroup": {
-                    "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/originGroups', parameters('cdnProfileName'), parameters('cdnEndPointName'), 'blob-origin-group')]"
-                },
-                "geoFilters": [],
-                "deliveryPolicy": {
-                    "rules": [
-                        {
-                            "name": "originOverrideRule",
-                            "order": 1,
-                            "conditions": [
-                                {
-                                    "name": "UrlPath",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleUrlPathMatchConditionParameters",
-                                        "operator": "BeginsWith",
-                                        "negateCondition": true,
-                                        "matchValues": [
-                                            "[concat(parameters('blobContainerName'), '/wp-content/uploads/')]"
-                                        ],
-                                        "transforms": [
-                                            "Lowercase"
-                                        ]
-                                    }
-                                }
-                            ],
-                            "actions": [
-                                {
-                                    "name": "OriginGroupOverride",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleOriginGroupOverrideActionParameters",
-                                        "originGroup": {
-                                            "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/originGroups', parameters('cdnProfileName'), parameters('cdnEndPointName'), 'app-origin-group')]"
-                                        }
-                                    }
-                                },
-                                {
-                                    "name": "UrlRewrite",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleUrlRewriteActionParameters",
-                                        "sourcePattern": "[concat('/', parameters('blobContainerName'), '/')]",
-                                        "destination": "/",
-                                        "preserveUnmatchedPath": true
-                                    }
-                                },
-                                {
-                                    "name": "ModifyResponseHeader",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleHeaderActionParameters",
-                                        "headerAction": "Overwrite",
-                                        "headerName": "Access-Control-Allow-Origin",
-                                        "value": "https://gesda-b7dggsh7h2ftavby.uksouth-01.azurewebsites.net"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            "dependsOn": [
-                "[concat('Microsoft.Cdn/profiles/', parameters('cdnProfileName'))]",
-                "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('blobContainerName'))]"
-            ]
-        },
-        {
-            "apiVersion": "[variables('cdnApiVersion')]",
-            "type": "Microsoft.Cdn/profiles/endpoints",
-            "name": "[concat(parameters('cdnProfileName'),'/',parameters('stagingCdnEndpointName'))]",
-            "location": "Global",
-            "dependsOn": [
-                "[concat('Microsoft.Cdn/profiles/', parameters('cdnProfileName'))]",
-                "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('blobContainerName'))]",
-                "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
-            ],
-            "properties": {
-                "isHttpAllowed": true,
-                "isHttpsAllowed": true,
-                "isCompressionEnabled": true,
-                "contentTypesToCompress": [
-                    "application/eot",
-                    "application/font",
-                    "application/font-sfnt",
-                    "application/javascript",
-                    "application/json",
-                    "application/opentype",
-                    "application/otf",
-                    "application/pkcs7-mime",
-                    "application/truetype",
-                    "application/ttf",
-                    "application/vnd.ms-fontobject",
-                    "application/xhtml+xml",
-                    "application/xml",
-                    "application/xml+rss",
-                    "application/x-font-opentype",
-                    "application/x-font-truetype",
-                    "application/x-font-ttf",
-                    "application/x-httpd-cgi",
-                    "application/x-javascript",
-                    "application/x-mpegurl",
-                    "application/x-opentype",
-                    "application/x-otf",
-                    "application/x-perl",
-                    "application/x-ttf",
-                    "font/eot",
-                    "font/ttf",
-                    "font/otf",
-                    "font/opentype",
-                    "image/svg+xml",
-                    "text/css",
-                    "text/csv",
-                    "text/html",
-                    "text/javascript",
-                    "text/js",
-                    "text/plain",
-                    "text/richtext",
-                    "text/tab-separated-values",
-                    "text/xml",
-                    "text/x-script",
-                    "text/x-component",
-                    "text/x-java-source"
-                ],
-                "origins": [
-                    {
-                        "name": "gesda-staging-h2a9ake0dcapetbu-uksouth-01-azurewebsites-net",
-                        "properties": {
-                            "hostName": "gesda-staging-h2a9ake0dcapetbu.uksouth-01.azurewebsites.net",
-                            "httpPort": 80,
-                            "httpsPort": 443,
-                            "originHostHeader": "gesda-staging-h2a9ake0dcapetbu.uksouth-01.azurewebsites.net",
-                            "priority": 1,
-                            "weight": 1000,
-                            "enabled": true
-                        }
-                    },
-                    {
-                        "name": "gesdabc8f815181-blob-core-windows-net",
-                        "properties": {
-                            "hostName": "gesdabc8f815181.blob.core.windows.net",
-                            "httpPort": 80,
-                            "httpsPort": 443,
-                            "originHostHeader": "gesdabc8f815181.blob.core.windows.net",
-                            "priority": 1,
-                            "weight": 1000,
-                            "enabled": true
-                        }
-                    }
-                ],
-                "originGroups": [
-                    {
-                        "name": "blob-origin-group",
-                        "properties": {
-                            "origins": [
-                                {
-                                    "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/origins', parameters('cdnProfileName'), parameters('stagingCdnEndpointName'), 'gesdabc8f815181-blob-core-windows-net')]"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "app-origin-group",
-                        "properties": {
-                            "origins": [
-                                {
-                                    "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/origins', parameters('cdnProfileName'), parameters('stagingCdnEndpointName'), 'gesda-staging-h2a9ake0dcapetbu-uksouth-01-azurewebsites-net')]"
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "defaultOriginGroup": {
-                    "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/originGroups', parameters('cdnProfileName'), parameters('stagingCdnEndpointName'), 'blob-origin-group')]"
-                },
-                "geoFilters": [],
-                "deliveryPolicy": {
-                    "rules": [
-                        {
-                            "name": "originOverrideRule",
-                            "order": 1,
-                            "conditions": [
-                                {
-                                    "name": "UrlPath",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleUrlPathMatchConditionParameters",
-                                        "operator": "BeginsWith",
-                                        "negateCondition": true,
-                                        "matchValues": [
-                                            "[concat(parameters('stagingBlobContainerName'), '/wp-content/uploads/')]"
-                                        ],
-                                        "transforms": [
-                                            "Lowercase"
-                                        ]
-                                    }
-                                }
-                            ],
-                            "actions": [
-                                {
-                                    "name": "OriginGroupOverride",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleOriginGroupOverrideActionParameters",
-                                        "originGroup": {
-                                            "id": "[resourceId('Microsoft.Cdn/profiles/endpoints/originGroups', parameters('cdnProfileName'), parameters('stagingCdnEndpointName'), 'app-origin-group')]"
-                                        }
-                                    }
-                                },
-                                {
-                                    "name": "UrlRewrite",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleUrlRewriteActionParameters",
-                                        "sourcePattern": "[concat('/', parameters('stagingBlobContainerName'), '/')]",
-                                        "destination": "/",
-                                        "preserveUnmatchedPath": true
-                                    }
-                                },
-                                {
-                                    "name": "ModifyResponseHeader",
-                                    "parameters": {
-                                        "typeName": "DeliveryRuleHeaderActionParameters",
-                                        "headerAction": "Overwrite",
-                                        "headerName": "Access-Control-Allow-Origin",
-                                        "value": "https://gesda-staging-h2a9ake0dcapetbu.uksouth-01.azurewebsites.net"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
             }
         },
         {
