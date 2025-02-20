@@ -10,7 +10,7 @@ pool:
   vmImage: windows-latest
 
 steps:
-- task: AzureFileCopy@6
+- task: AzureFileCopy@5
   inputs:
     SourcePath: 'templates'
     azureSubscription: 'Gesda-ARMPipeline-conn'
