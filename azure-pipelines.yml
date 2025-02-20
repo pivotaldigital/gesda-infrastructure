@@ -13,7 +13,7 @@ steps:
 - task: AzureFileCopy@5
   inputs:
     SourcePath: 'templates'
-    azureSubscription: 'Gesda-ARMPipeline-conn'
+    azureSubscription: 'azure-storage-connection'
     Destination: 'AzureBlob'
     storage: 'gesdatemplatestorage'
     ContainerName: 'infrastructure-templates'
