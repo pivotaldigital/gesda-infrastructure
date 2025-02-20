@@ -12,7 +12,7 @@ pool:
 steps:
 - task: AzureFileCopy@6
   inputs:
-    SourcePath: './'
+    SourcePath: 'templates'
     azureSubscription: 'Gesda-ARMPipeline-conn'
     Destination: 'AzureBlob'
     storage: 'gesdatemplatestorage'
@@ -28,8 +28,8 @@ steps:
     resourceGroupName: 'gesda-uk-tmp'
     location: 'UK South'
     templateLocation: 'URL of the file'
-    csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
-    csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.parameters.json'
+    csmFileLink: '$(AzureFileCopy.StorageContainerUri)templates/azuredeploy.json$(AzureFileCopy.StorageContainerSasToken)'
+    csmParametersFileLink: '$(AzureFileCopy.StorageContainerUri)templates/azuredeploy.parameters.json$(AzureFileCopy.StorageContainerSasToken)'
     deploymentMode: 'Validation'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
     
