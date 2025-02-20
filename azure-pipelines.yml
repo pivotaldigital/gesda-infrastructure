@@ -17,6 +17,7 @@ steps:
     Destination: 'AzureBlob'
     storage: 'gesdatemplatestorage'
     ContainerName: 'infrastructure-templates'
+    AdditionalArgumentsForBlobCopy: --recursive=true
   name: AzureFileCopy
 
 - task: AzureResourceManagerTemplateDeployment@3
