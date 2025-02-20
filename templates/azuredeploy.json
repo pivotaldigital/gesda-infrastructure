@@ -945,7 +945,7 @@
                     {
                         "name": "[parameters('subnetForDb')]",
                         "properties": {
-                            "addressPrefix": "10.0.1.0/23",
+                            "addressPrefix": "10.0.2.0/23",
                             "delegations": [
                                 {
                                     "name": "dlg-appService",
