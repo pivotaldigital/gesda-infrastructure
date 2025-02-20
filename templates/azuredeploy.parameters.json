@@ -15,7 +15,7 @@
             "value": "ASP-gesdauk-a1be"
         },
         "targetResourceGroup": {
-            "value": "gesda-uk-tmp"
+            "value": "gesda-uk"
         },
         "ftpsState": {
             "value": "FtpsOnly"
