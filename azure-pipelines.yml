@@ -7,19 +7,9 @@ trigger:
 - main
 
 pool:
-  vmImage: windows-latest
+  vmImage: ubuntu-latest
 
 steps:
-- task: AzureFileCopy@4
-  inputs:
-    SourcePath: 'templates'
-    azureSubscription: 'Gesda-ARMPipeline-conn'
-    Destination: 'AzureBlob'
-    storage: 'gesdatemplatestorage'
-    ContainerName: 'infrastructure-templates'
-    BlobPrefix: 'gesda/'
-  name: AzureFileCopy
-
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
@@ -29,7 +19,8 @@ steps:
     resourceGroupName: 'gesda-uk'
     location: 'UK South'
     templateLocation: 'URL of the file'
-    csmFileLink: '$(AzureFileCopy.StorageContainerUri)templates/azuredeploy.json$(AzureFileCopy.StorageContainerSasToken)'
-    csmParametersFileLink: '$(AzureFileCopy.StorageContainerUri)templates/azuredeploy.parameters.json$(AzureFileCopy.StorageContainerSasToken)'
-    deploymentMode: 'Validation'
+    csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/templates/azuredeploy.json'
+    csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/templates/azuredeploy.parameters.json'
+    deploymentMode: 'Incremental'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
+    
