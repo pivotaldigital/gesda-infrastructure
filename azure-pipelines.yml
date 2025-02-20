@@ -10,7 +10,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: AzureResourceManagerTemplateDeployment@3
+- task: AzureFileCopy@1
+  inputs:
+    SourcePath: './'
+    azureSubscription: 'Gesda-ARMPipeline-conn'
+    Destination: 'AzureBlob'
+    storage: 'gesdatemplatestorage'
+    ContainerName: 'InfrastructureTemplates'
+  name: AzureFileCopy
+
+- task: AzureResourceManagerTemplateDeployment@2
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'Gesda-ARMPipeline-conn'
@@ -21,6 +30,6 @@ steps:
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.json'
     csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/azuredeploy.parameters.json'
-    deploymentMode: 'Incremental'
+    deploymentMode: 'Validation'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
     
