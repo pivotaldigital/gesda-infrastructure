@@ -953,7 +953,7 @@
                     {
                         "name": "appGatewayFrontendPort",
                         "properties": {
-                            "Port": 80
+                            "Port": 443
                         }
                     }
                 ],
@@ -973,10 +973,11 @@
                     {
                         "name": "appGatewayBackendHttpSettings",
                         "properties": {
-                            "Port": 80,
-                            "Protocol": "Http",
+                            "Port": 443,
+                            "Protocol": "Https",
                             "CookieBasedAffinity": "Disabled",
-                            "PickHostNameFromBackendAddress": true,
+                            "PickHostNameFromBackendAddress": false,
+                            "hostName": "gesda.pivotal.digital",
                             "ProbeEnabled": true,
                             "Probe": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'Probe1')]"
@@ -994,7 +995,7 @@
                             "FrontendPort": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/',variables('applicationGatewayName'), 'appGatewayFrontendPort')]"
                             },
-                            "Protocol": "Http"
+                            "Protocol": "Https"
                         }
                     }
                 ],
@@ -1019,13 +1020,14 @@
                     {
                         "Name": "Probe1",
                         "properties": {
-                            "Protocol": "Http",
+                            "Protocol": "Https",
                             "Path": "/",
                             "Interval": 30,
                             "Timeout": 10,
                             "UnhealthyThreshold": 3,
                             "MinServers": 0,
-                            "PickHostNameFromBackendHttpSettings": true
+                            "PickHostNameFromBackendHttpSettings": false,
+                            "host": "gesda.pivotal.digital"
                         }
                     }
                 ]
@@ -1083,7 +1085,7 @@
                     {
                         "name": "appGatewayFrontendPort",
                         "properties": {
-                            "Port": 80
+                            "Port": 443
                         }
                     }
                 ],
@@ -1103,13 +1105,14 @@
                     {
                         "name": "appGatewayBackendHttpSettings",
                         "properties": {
-                            "Port": 80,
-                            "Protocol": "Http",
+                            "Port": 443,
+                            "Protocol": "Https",
                             "CookieBasedAffinity": "Disabled",
-                            "PickHostNameFromBackendAddress": true,
+                            "PickHostNameFromBackendAddress": false,
+                            "hostName": "gesda-staging.pivotal.digital",
                             "ProbeEnabled": true,
                             "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'Probe1')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'Probe1')]"
                             }
                         }
                     }
@@ -1124,7 +1127,7 @@
                             "FrontendPort": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayFrontendPort')]"
                             },
-                            "Protocol": "Http"
+                            "Protocol": "Https"
                         }
                     }
                 ],
@@ -1149,13 +1152,14 @@
                     {
                         "Name": "Probe1",
                         "properties": {
-                            "Protocol": "Http",
+                            "Protocol": "Https",
                             "Path": "/",
                             "Interval": 30,
                             "Timeout": 10,
                             "UnhealthyThreshold": 3,
                             "MinServers": 0,
-                            "PickHostNameFromBackendHttpSettings": true
+                            "PickHostNameFromBackendHttpSettings": false,
+                            "host": "gesda-staging.pivotal.digital"
                         }
                     }
                 ]
