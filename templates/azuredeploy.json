@@ -752,9 +752,7 @@
             "properties": {
                 "siteName": "[parameters('name')]",
                 "hostNameType": "Verified",
-                "customHostNameDnsRecordType": "CName",
-                "sslState": "SniEnabled",
-                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]"
+                "customHostNameDnsRecordType": "CName"
             }
         },
         {
@@ -769,9 +767,7 @@
             "properties": {
                 "siteName": "[concat(parameters('name'), '/staging')]",
                 "hostNameType": "Verified",
-                "customHostNameDnsRecordType": "CName",
-                "sslState": "SniEnabled",
-                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', format('{0}-{1}', parameters('certificateName'), 'staging'))).Thumbprint]"
+                "customHostNameDnsRecordType": "CName"
             }
         },
         {
