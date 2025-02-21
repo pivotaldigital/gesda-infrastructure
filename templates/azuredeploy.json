@@ -438,7 +438,7 @@
                     },
                     {
                         "tenantId": "[subscription().tenantId]",
-                        "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))).objectId]",
+                        "objectId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]",
                         "permissions": {
                             "secrets": [
                                 "get",
