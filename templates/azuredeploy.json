@@ -758,7 +758,7 @@
         {
             "type": "Microsoft.Web/sites/slots/hostNameBindings",
             "apiVersion": "2021-03-01",
-            "name": "[concat(parameters('name'), '/staging/', 'staging')]",
+            "name": "[format('{0}/{1}/{2}', parameters('name'), parameters('domainName'), 'staging')]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites', parameters('name'))]",
