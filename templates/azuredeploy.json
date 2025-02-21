@@ -435,23 +435,6 @@
                                 "import"
                             ]
                         }
-                    },
-                    {
-                        "tenantId": "[subscription().tenantId]",
-                        "objectId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]",
-                        "permissions": {
-                            "secrets": [
-                                "get",
-                                "list",
-                                "set"
-                            ],
-                            "certificates": [
-                                "get",
-                                "list",
-                                "create",
-                                "import"
-                            ]
-                        }
                     }
                 ],
                 "tenantId": "[variables('tenantId')]",
