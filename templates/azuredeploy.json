@@ -446,10 +446,7 @@
                 "enableSoftDelete": "[parameters('kvEnableSoftDelete')]",
                 "softDeleteRetentionInDays": "[parameters('kvSoftDeleteRetentionInDays')]",
                 "networkAcls": "[parameters('kvNetworkAcls')]"
-            },
-            "dependsOn": [
-                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]"
-            ]
+            }
         },
         {
             "apiVersion": "[variables('keyVaultApiVersion')]",
