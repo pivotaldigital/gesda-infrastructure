@@ -621,7 +621,7 @@
         },
         {
             "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2019-08-01",
+            "apiVersion": "2021-03-01",
             "name": "[format('{0}/{1}', parameters('name'), parameters('domainName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -635,11 +635,11 @@
         },
         {
             "type": "Microsoft.Web/sites/slots/hostNameBindings",
-            "apiVersion": "2024-04-01",
-            "name": "[format('{0}/{1}/{2}', parameters('name'), variables('slotName'), variables('hostNameBindingName'))]",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('name'), '/staging/', parameters('stagingDomainName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites/slots', parameters('name'), variables('slotName'))]"
+                "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
             ],
             "properties": {
                 "siteName": "[parameters('name')]",
