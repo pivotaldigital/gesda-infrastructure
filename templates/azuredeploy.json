@@ -496,7 +496,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
                 "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-                "[resourceId('Microsoft.Web/sites/hostNameBindings', parameters('name'), parameters('stagingDomainName'))]"
+                "[resourceId('Microsoft.Web/sites/slots/hostNameBindings', parameters('name'), 'staging', parameters('stagingDomainName'))]"
             ],
             "properties": {
                 "canonicalName": "[parameters('stagingDomainName')]",
@@ -758,14 +758,14 @@
         {
             "type": "Microsoft.Web/sites/slots/hostNameBindings",
             "apiVersion": "2021-03-01",
-            "name": "[format('{0}/{1}/{2}', parameters('name'), parameters('domainName'), 'staging')]",
+            "name": "[concat(parameters('name'), '/staging/', parameters('stagingDomainName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites', parameters('name'))]",
                 "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
             ],
             "properties": {
-                "siteName": "[concat(parameters('name'), 'staging')]",
+                "siteName": "[concat(parameters('name'), '/staging')]",
                 "hostNameType": "Verified",
                 "customHostNameDnsRecordType": "CName"
             }
