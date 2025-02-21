@@ -764,7 +764,7 @@
                 "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
             ],
             "properties": {
-                "siteName": "[parameters('name')]",
+                "siteName": "[concat(parameters('name'), '/staging')]",
                 "hostNameType": "Verified",
                 "customHostNameDnsRecordType": "CName"
             }
