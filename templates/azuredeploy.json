@@ -255,6 +255,10 @@
             "type": "string",
             "defaultValue": "gesda-bc8f815181-agsubnet"
         },
+        "subnetForStageAg": {
+            "type": "string",
+            "defaultValue": "gesda-bc8f815181-stageagsubnet"
+        },
         "privateDnsZoneNameForDb": {
             "type": "string",
             "defaultValue": "gesda-bc8f815181-privatelink.mysql.database.azure.com"
@@ -385,7 +389,7 @@
                 "zoneRedundancy": "[parameters('zoneRedundancy')]"
             }
         },
-        {
+        /* {
             "apiVersion": "[variables('keyVaultApiVersion')]",
             "type": "Microsoft.KeyVault/vaults",
             "name": "[parameters('kvName')]",
@@ -499,7 +503,7 @@
                 "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             }
-        },
+        }, */
         {
             "apiVersion": "[variables('appServicesApiVersion')]",
             "name": "[parameters('name')]",
@@ -613,7 +617,7 @@
                 }
             }
         },
-        {
+        /* {
             "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2019-08-01",
             "name": "[format('{0}/{1}', parameters('name'), parameters('domainName'))]",
@@ -640,7 +644,7 @@
                 "hostNameType": "Verified",
                 "customHostNameDnsRecordType": "CName"
             }
-        },
+        }, */
         {
             "apiVersion": "[variables('appServicesApiVersion')]",
             "name": "[parameters('hostingPlanName')]",
@@ -903,6 +907,136 @@
             }
         },
         {
+            "apiVersion": "2020-05-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[concat(variables('publicIPAddressName'), '-staging')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            },
+            "sku": {
+                "name": "Standard"
+            }
+        },
+        {
+            "apiVersion": "2020-05-01",
+            "name": "[concat(variables('applicationGatewayName'), '-staging')]",
+            "type": "Microsoft.Network/applicationGateways",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+                "[resourceId('Microsoft.Web/sites/', parameters('name'))]"
+            ],
+            "properties": {
+                "sku": {
+                    "name": "Standard_v2",
+                    "tier": "Standard_v2",
+                    "capacity": 2
+                },
+                "gatewayIPConfigurations": [
+                    {
+                        "name": "appGatewayIpConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetForStageAg'))]"
+                            }
+                        }
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "appGatewayFrontendIP",
+                        "properties": {
+                            "PublicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'), '-staging')]"
+                            }
+                        }
+                    }
+                ],
+                "frontendPorts": [
+                    {
+                        "name": "appGatewayFrontendPort",
+                        "properties": {
+                            "Port": 80
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "appGatewayBackendPool",
+                        "properties": {
+                            "BackendAddresses": [
+                                {
+                                    "IpAddress": "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging').defaultHostName]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "backendHttpSettingsCollection": [
+                    {
+                        "name": "appGatewayBackendHttpSettings",
+                        "properties": {
+                            "Port": 80,
+                            "Protocol": "Http",
+                            "CookieBasedAffinity": "Disabled",
+                            "PickHostNameFromBackendAddress": true,
+                            "ProbeEnabled": true,
+                            "Probe": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), '-staging', 'Probe1')]"
+                            }
+                        }
+                    }
+                ],
+                "httpListeners": [
+                    {
+                        "name": "appGatewayHttpListener",
+                        "properties": {
+                            "FrontendIPConfiguration": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations/',variables('applicationGatewayName'), '-staging', 'appGatewayFrontendIP')]"
+                            },
+                            "FrontendPort": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/',variables('applicationGatewayName'), '-staging', 'appGatewayFrontendPort')]"
+                            },
+                            "Protocol": "Http"
+                        }
+                    }
+                ],
+                "requestRoutingRules": [
+                    {
+                        "Name": "rule1",
+                        "properties": {
+                            "RuleType": "Basic",
+                            "httpListener": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/',variables('applicationGatewayName'), '-staging', 'appGatewayHttpListener')]"
+                            },
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/',variables('applicationGatewayName'), '-staging', 'appGatewayBackendPool')]"
+                            },
+                            "backendHttpSettings": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/',variables('applicationGatewayName'), '-staging', 'appGatewayBackendHttpSettings')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "Name": "Probe1",
+                        "properties": {
+                            "Protocol": "Http",
+                            "Path": "/",
+                            "Interval": 30,
+                            "Timeout": 10,
+                            "UnhealthyThreshold": 3,
+                            "MinServers": 0,
+                            "PickHostNameFromBackendHttpSettings": true
+                        }
+                    }
+                ]
+            }
+        },
+        {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "[variables('vnetDeploymentApiVersion')]",
             "location": "[parameters('location')]",
@@ -920,7 +1054,7 @@
                             "addressPrefix": "10.0.0.0/25",
                             "delegations": [
                                 {
-                                    "name": "dlg-appService",
+                                    "name": "dlg-agService",
                                     "properties": {
                                         "serviceName": "Microsoft.Network/applicationGateways"
                                     }
@@ -948,9 +1082,23 @@
                             "addressPrefix": "10.0.1.0/25",
                             "delegations": [
                                 {
-                                    "name": "dlg-appService",
+                                    "name": "dlg-dbService",
                                     "properties": {
                                         "serviceName": "Microsoft.DBforMySQL/flexibleServers"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnetForStageAg')]",
+                        "properties": {
+                            "addressPrefix": "10.0.10.0/25",
+                            "delegations": [
+                                {
+                                    "name": "dlg-agStageService",
+                                    "properties": {
+                                        "serviceName": "Microsoft.Network/applicationGateways"
                                     }
                                 }
                             ]
