@@ -414,7 +414,8 @@
                             "certificates": [
                                 "get",
                                 "list",
-                                "create"
+                                "create",
+                                "import"
                             ]
                         }
                     },
@@ -430,7 +431,25 @@
                             "certificates": [
                                 "get",
                                 "list",
-                                "create"
+                                "create",
+                                "import"
+                            ]
+                        }
+                    },
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))).objectId]",
+                        "permissions": {
+                            "secrets": [
+                                "get",
+                                "list",
+                                "set"
+                            ],
+                            "certificates": [
+                                "get",
+                                "list",
+                                "create",
+                                "import"
                             ]
                         }
                     }
@@ -445,8 +464,9 @@
                 "softDeleteRetentionInDays": "[parameters('kvSoftDeleteRetentionInDays')]",
                 "networkAcls": "[parameters('kvNetworkAcls')]"
             },
-            "tags": {},
-            "dependsOn": []
+            "dependsOn": [
+                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]"
+            ]
         },
         {
             "apiVersion": "[variables('keyVaultApiVersion')]",
@@ -929,6 +949,14 @@
                     "tier": "Standard_v2",
                     "capacity": 2
                 },
+                "sslCertificates": [
+                    {
+                        "name": "appGatewaySslCert",
+                        "properties": {
+                            "keyVaultSecretId": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]"
+                        }
+                    }
+                ],
                 "gatewayIPConfigurations": [
                     {
                         "name": "appGatewayIpConfig",
@@ -995,7 +1023,10 @@
                             "FrontendPort": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/',variables('applicationGatewayName'), 'appGatewayFrontendPort')]"
                             },
-                            "Protocol": "Https"
+                            "Protocol": "Https",
+                            "SslCertificate": {
+                                "Id": "[resourceId('Microsoft.Network/applicationGateways/sslCertificates',variables('applicationGatewayName'), 'appGatewaySslCert')]"
+                            }
                         }
                     }
                 ],
@@ -1061,6 +1092,14 @@
                     "tier": "Standard_v2",
                     "capacity": 2
                 },
+                "sslCertificates": [
+                    {
+                        "name": "appGatewaySslCert",
+                        "properties": {
+                            "keyVaultSecretId": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]"
+                        }
+                    }
+                ],
                 "gatewayIPConfigurations": [
                     {
                         "name": "appGatewayIpConfig",
@@ -1127,7 +1166,10 @@
                             "FrontendPort": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayFrontendPort')]"
                             },
-                            "Protocol": "Https"
+                            "Protocol": "Https",
+                            "SslCertificate": {
+                                "Id": "[resourceId('Microsoft.Network/applicationGateways/sslCertificates', format('{0}-staging', variables('applicationGatewayName')), 'appGatewaySslCert')]"
+                            }
                         }
                     }
                 ],
