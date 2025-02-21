@@ -925,7 +925,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
-                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses/', format('{0}-staging', variables('publicIPAddressName')))]",
                 "[resourceId('Microsoft.Web/sites/', parameters('name'))]"
             ],
             "properties": {
@@ -949,7 +949,7 @@
                         "name": "appGatewayFrontendIP",
                         "properties": {
                             "PublicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'), '-staging')]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', format('{0}-staging', variables('publicIPAddressName')))]"
                             }
                         }
                     }
@@ -984,7 +984,7 @@
                             "PickHostNameFromBackendAddress": true,
                             "ProbeEnabled": true,
                             "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), '-staging', 'Probe1')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'Probe1')]"
                             }
                         }
                     }
@@ -994,10 +994,10 @@
                         "name": "appGatewayHttpListener",
                         "properties": {
                             "FrontendIPConfiguration": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations/',variables('applicationGatewayName'), '-staging', 'appGatewayFrontendIP')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayFrontendIP')]"
                             },
                             "FrontendPort": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/',variables('applicationGatewayName'), '-staging', 'appGatewayFrontendPort')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/frontendPorts/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayFrontendPort')]"
                             },
                             "Protocol": "Http"
                         }
@@ -1009,13 +1009,13 @@
                         "properties": {
                             "RuleType": "Basic",
                             "httpListener": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/',variables('applicationGatewayName'), '-staging', 'appGatewayHttpListener')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayHttpListener')]"
                             },
                             "backendAddressPool": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/',variables('applicationGatewayName'), '-staging', 'appGatewayBackendPool')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendPool')]"
                             },
                             "backendHttpSettings": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/',variables('applicationGatewayName'), '-staging', 'appGatewayBackendHttpSettings')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendHttpSettings')]"
                             }
                         }
                     }
