@@ -620,6 +620,128 @@
             }
         },
         {
+            "type": "Microsoft.Web/sites/slots",
+            "apiVersion": "[variables('appServicesApiVersion')]",
+            "name": "[format('{0}/staging', parameters('name'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
+                "[resourceId('Microsoft.Web/sites/config', parameters('name'), 'web')]",
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers/databases', parameters('serverName'), parameters('stagingDatabaseName'))]",
+                "[resourceId('Microsoft.Web/sites/networkConfig', parameters('name'), 'virtualNetwork')]",
+                "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('stagingBlobContainerName'))]"
+            ],
+            "kind": "[parameters('kind')]",
+            "properties": {
+                "clientAffinityEnabled": false,
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "virtualNetworkSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName'), '/subnets/', parameters('subnetForApp'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_URL",
+                            "value": "[parameters('dockerRegistryUrl')]"
+                        },
+                        {
+                            "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                            "value": "true"
+                        },
+                        {
+                            "name": "DATABASE_HOST",
+                            "value": "[concat(parameters('serverName'),'.mysql.database.azure.com')]"
+                        },
+                        {
+                            "name": "DATABASE_NAME",
+                            "value": "[parameters('stagingDatabaseName')]"
+                        },
+                        {
+                            "name": "WEBSITES_CONTAINER_START_TIME_LIMIT",
+                            "value": "1800"
+                        },
+                        {
+                            "name": "WORDPRESS_LOCALE_CODE",
+                            "value": "[parameters('wpLocaleCode')]"
+                        },
+                        {
+                            "name": "SETUP_PHPMYADMIN",
+                            "value": "true"
+                        },
+                        {
+                            "name": "WORDPRESS_LOCAL_STORAGE_CACHE_ENABLED",
+                            "value": "true"
+                        },
+                        {
+                            "name": "ENTRA_CLIENT_ID",
+                            "value": "[reference(concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
+                        },
+                        {
+                            "name": "ENABLE_MYSQL_MANAGED_IDENTITY",
+                            "value": "true"
+                        },
+                        {
+                            "name": "DATABASE_USERNAME",
+                            "value": "[parameters('managedIdentityName')]"
+                        },
+                        {
+                            "name": "BLOB_STORAGE_ENABLED",
+                            "value": "true"
+                        },
+                        {
+                            "name": "STORAGE_ACCOUNT_NAME",
+                            "value": "[parameters('storageAccountName')]"
+                        },
+                        {
+                            "name": "BLOB_CONTAINER_NAME",
+                            "value": "[parameters('stagingBlobContainerName')]"
+                        },
+                        {
+                            "name": "BLOB_STORAGE_URL",
+                            "value": "[concat(parameters('storageAccountName'),'.blob.core.windows.net')]"
+                        },
+                        {
+                            "name": "STORAGE_ACCOUNT_KEY",
+                            "value": "[listKeys(variables('storageAccountId'), '2019-04-01').keys[0].value]"
+                        },
+                        {
+                            "name": "WP_EMAIL_CONNECTION_STRING",
+                            "value": "[concat('endpoint=',concat('https://',reference(variables('acsAccountId')).hostName),';senderaddress=',concat( variables('acsSenderEmailAddress'),'@',reference(variables('ecsAccountId')).mailFromSenderDomain))]"
+                        },
+                        {
+                            "name": "ENABLE_EMAIL_MANAGED_IDENTITY",
+                            "value": "true"
+                        }
+                    ],
+                    "connectionStrings": [
+                        {
+                            "name": "WORDPRESS_ADMIN_EMAIL",
+                            "ConnectionString": "[parameters('wordpressAdminEmail')]",
+                            "type": "Custom"
+                        },
+                        {
+                            "name": "WORDPRESS_ADMIN_USER",
+                            "ConnectionString": "[parameters('wordpressUsername')]",
+                            "type": "Custom"
+                        },
+                        {
+                            "name": "WORDPRESS_ADMIN_PASSWORD",
+                            "ConnectionString": "[parameters('wordpressPassword')]",
+                            "type": "Custom"
+                        }
+                    ],
+                    "ftpsState": "[parameters('ftpsState')]",
+                    "alwaysOn": "[parameters('alwaysOn')]",
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]"
+                }
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "UserAssignedIdentities": {
+                    "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]": {}
+                }
+            }
+        },
+        {
             "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2021-03-01",
             "name": "[format('{0}/{1}', parameters('name'), parameters('domainName'))]",
@@ -1146,128 +1268,6 @@
                 "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
                 "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('privateDnsZoneNameForDb'), format('{0}-vnetlink', parameters('privateDnsZoneNameForDb')))]"
             ]
-        },
-        {
-            "type": "Microsoft.Web/sites/slots",
-            "apiVersion": "[variables('appServicesApiVersion')]",
-            "name": "[concat(parameters('name'), '/staging')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/Sites', parameters('name'))]",
-                "[resourceId('Microsoft.Web/sites/config', parameters('name'), 'web')]",
-                "[resourceId('Microsoft.DBforMySQL/flexibleServers/databases', parameters('serverName'), parameters('stagingDatabaseName'))]",
-                "[resourceId('Microsoft.Web/sites/networkConfig', parameters('name'), 'virtualNetwork')]",
-                "[resourceId('Microsoft.Communication/CommunicationServices', parameters('commServiceName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('stagingBlobContainerName'))]"
-            ],
-            "kind": "[parameters('kind')]",
-            "properties": {
-                "clientAffinityEnabled": false,
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-                "virtualNetworkSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName'), '/subnets/', parameters('subnetForApp'))]",
-                "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "DOCKER_REGISTRY_SERVER_URL",
-                            "value": "[parameters('dockerRegistryUrl')]"
-                        },
-                        {
-                            "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
-                            "value": "true"
-                        },
-                        {
-                            "name": "DATABASE_HOST",
-                            "value": "[concat(parameters('serverName'),'.mysql.database.azure.com')]"
-                        },
-                        {
-                            "name": "DATABASE_NAME",
-                            "value": "[parameters('stagingDatabaseName')]"
-                        },
-                        {
-                            "name": "WEBSITES_CONTAINER_START_TIME_LIMIT",
-                            "value": "1800"
-                        },
-                        {
-                            "name": "WORDPRESS_LOCALE_CODE",
-                            "value": "[parameters('wpLocaleCode')]"
-                        },
-                        {
-                            "name": "SETUP_PHPMYADMIN",
-                            "value": "true"
-                        },
-                        {
-                            "name": "WORDPRESS_LOCAL_STORAGE_CACHE_ENABLED",
-                            "value": "true"
-                        },
-                        {
-                            "name": "ENTRA_CLIENT_ID",
-                            "value": "[reference(concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
-                        },
-                        {
-                            "name": "ENABLE_MYSQL_MANAGED_IDENTITY",
-                            "value": "true"
-                        },
-                        {
-                            "name": "DATABASE_USERNAME",
-                            "value": "[parameters('managedIdentityName')]"
-                        },
-                        {
-                            "name": "BLOB_STORAGE_ENABLED",
-                            "value": "true"
-                        },
-                        {
-                            "name": "STORAGE_ACCOUNT_NAME",
-                            "value": "[parameters('storageAccountName')]"
-                        },
-                        {
-                            "name": "BLOB_CONTAINER_NAME",
-                            "value": "[parameters('stagingBlobContainerName')]"
-                        },
-                        {
-                            "name": "BLOB_STORAGE_URL",
-                            "value": "[concat(parameters('storageAccountName'),'.blob.core.windows.net')]"
-                        },
-                        {
-                            "name": "STORAGE_ACCOUNT_KEY",
-                            "value": "[listKeys(variables('storageAccountId'), '2019-04-01').keys[0].value]"
-                        },
-                        {
-                            "name": "WP_EMAIL_CONNECTION_STRING",
-                            "value": "[concat('endpoint=',concat('https://',reference(variables('acsAccountId')).hostName),';senderaddress=',concat( variables('acsSenderEmailAddress'),'@',reference(variables('ecsAccountId')).mailFromSenderDomain))]"
-                        },
-                        {
-                            "name": "ENABLE_EMAIL_MANAGED_IDENTITY",
-                            "value": "true"
-                        }
-                    ],
-                    "connectionStrings": [
-                        {
-                            "name": "WORDPRESS_ADMIN_EMAIL",
-                            "ConnectionString": "[parameters('wordpressAdminEmail')]",
-                            "type": "Custom"
-                        },
-                        {
-                            "name": "WORDPRESS_ADMIN_USER",
-                            "ConnectionString": "[parameters('wordpressUsername')]",
-                            "type": "Custom"
-                        },
-                        {
-                            "name": "WORDPRESS_ADMIN_PASSWORD",
-                            "ConnectionString": "[parameters('wordpressPassword')]",
-                            "type": "Custom"
-                        }
-                    ],
-                    "ftpsState": "[parameters('ftpsState')]",
-                    "alwaysOn": "[parameters('alwaysOn')]",
-                    "linuxFxVersion": "[parameters('linuxFxVersion')]"
-                }
-            },
-            "identity": {
-                "type": "UserAssigned",
-                "UserAssignedIdentities": {
-                    "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]": {}
-                }
-            }
         },
         {
             "type": "Microsoft.Communication/emailServices",
