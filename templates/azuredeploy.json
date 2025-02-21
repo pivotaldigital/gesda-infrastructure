@@ -437,7 +437,7 @@
                         }
                     }
                 ],
-                "tenantId": "[variables('tenantId')]",
+                "tenantId": "[subscription().tenantId]",
                 "sku": {
                     "name": "[parameters('kvSku')]",
                     "family": "A"
