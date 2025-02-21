@@ -373,7 +373,8 @@
         "roleDefinitionsApiVersion": "2022-04-01",
         "registryApiVersion": "2022-02-01-preview",
         "keyVaultApiVersion": "2022-02-01-preview",
-        "tenantId": "[subscription().tenantId]"
+        "tenantId": "[subscription().tenantId]",
+        "slotName": "staging"
     },
     "resources": [
         {
@@ -634,13 +635,13 @@
         {
             "type": "Microsoft.Web/sites/slots/hostNameBindings",
             "apiVersion": "2024-04-01",
-            "name": "[format('{0}/staging/{1}', parameters('name'), parameters('stagingDomainName'))]",
+            "name": "[format('{0}/{1}/{2}', parameters('name'), variables('slotName'), parameters('stagingDomainName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
+                "[resourceId('Microsoft.Web/sites/slots', parameters('name'), variables('slotName'))]"
             ],
             "properties": {
-                "siteName": "[concat(parameters('name'), '/staging')]",
+                "siteName": "[parameters('name')]",
                 "hostNameType": "Verified",
                 "customHostNameDnsRecordType": "CName"
             }
