@@ -389,7 +389,7 @@
                 "zoneRedundancy": "[parameters('zoneRedundancy')]"
             }
         },
-        /* {
+        {
             "apiVersion": "[variables('keyVaultApiVersion')]",
             "type": "Microsoft.KeyVault/vaults",
             "name": "[parameters('kvName')]",
@@ -503,7 +503,7 @@
                 "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             }
-        }, */
+        },
         {
             "apiVersion": "[variables('appServicesApiVersion')]",
             "name": "[parameters('name')]",
@@ -617,7 +617,7 @@
                 }
             }
         },
-        /* {
+        {
             "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2019-08-01",
             "name": "[format('{0}/{1}', parameters('name'), parameters('domainName'))]",
@@ -632,9 +632,9 @@
             }
         },
         {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2019-08-01",
-            "name": "[format('{0}/{1}', parameters('name'), parameters('stagingDomainName'))]",
+            "type": "Microsoft.Web/sites/slots/hostNameBindings",
+            "apiVersion": "2024-04-01",
+            "name": "[format('{0}/{1}/{2}', parameters('name'), 'staging', parameters('stagingDomainName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
@@ -644,7 +644,7 @@
                 "hostNameType": "Verified",
                 "customHostNameDnsRecordType": "CName"
             }
-        }, */
+        },
         {
             "apiVersion": "[variables('appServicesApiVersion')]",
             "name": "[parameters('hostingPlanName')]",
