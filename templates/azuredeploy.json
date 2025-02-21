@@ -1076,7 +1076,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[parameters('kvStagingSecretValue')]"
+                            "keyVaultSecretId": "[concat('https://', parameters('kvName'), '.vault.azure.net/secrets/', parameters('kvStagingSecretName'))]"
                         }
                     }
                 ],
@@ -1131,7 +1131,7 @@
                             "hostName": "gesda-staging.pivotal.digital",
                             "ProbeEnabled": true,
                             "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'Probe1')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'Probe1')]"
                             }
                         }
                     }
