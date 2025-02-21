@@ -477,8 +477,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]",
-                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-                "[resourceId('Microsoft.Web/sites/hostNameBindings', parameters('name'), parameters('domainName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             ],
             "properties": {
                 "canonicalName": "[parameters('domainName')]",
@@ -495,8 +494,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
-                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-                "[resourceId('Microsoft.Web/sites/slots/hostNameBindings', parameters('name'), 'staging', parameters('stagingDomainName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             ],
             "properties": {
                 "canonicalName": "[parameters('stagingDomainName')]",
@@ -752,7 +750,9 @@
             "properties": {
                 "siteName": "[parameters('name')]",
                 "hostNameType": "Verified",
-                "customHostNameDnsRecordType": "CName"
+                "customHostNameDnsRecordType": "CName",
+                "sslState": "SniEnabled",
+                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]"
             }
         },
         {
@@ -767,7 +767,9 @@
             "properties": {
                 "siteName": "[concat(parameters('name'), '/staging')]",
                 "hostNameType": "Verified",
-                "customHostNameDnsRecordType": "CName"
+                "customHostNameDnsRecordType": "CName",
+                "sslState": "SniEnabled",
+                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', format('{0}-{1}', parameters('certificateName'), 'staging'))).Thumbprint]"
             }
         },
         {
@@ -985,7 +987,7 @@
                             "Protocol": "Https",
                             "CookieBasedAffinity": "Disabled",
                             "PickHostNameFromBackendAddress": false,
-                            "hostName": "gesda.pivotal.digital",
+                            "hostName": "[parameters('domainName')]",
                             "ProbeEnabled": true,
                             "Probe": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'Probe1')]"
@@ -1038,7 +1040,7 @@
                             "UnhealthyThreshold": 3,
                             "MinServers": 0,
                             "PickHostNameFromBackendHttpSettings": false,
-                            "host": "gesda.pivotal.digital"
+                            "host": "[parameters('domainName')]"
                         }
                     }
                 ]
@@ -1128,7 +1130,7 @@
                             "Protocol": "Https",
                             "CookieBasedAffinity": "Disabled",
                             "PickHostNameFromBackendAddress": false,
-                            "hostName": "gesda-staging.pivotal.digital",
+                            "hostName": "[parameters('stagingDomainName')]",
                             "ProbeEnabled": true,
                             "Probe": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'Probe1')]"
@@ -1181,7 +1183,7 @@
                             "UnhealthyThreshold": 3,
                             "MinServers": 0,
                             "PickHostNameFromBackendHttpSettings": false,
-                            "host": "gesda-staging.pivotal.digital"
+                            "host": "[parameters('stagingDomainName')]"
                         }
                     }
                 ]
