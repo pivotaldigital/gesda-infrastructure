@@ -761,10 +761,11 @@
             "name": "[concat(parameters('name'), '/staging/', parameters('stagingDomainName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('name'))]",
                 "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
             ],
             "properties": {
-                "siteName": "[concat(parameters('name'), '/staging')]",
+                "siteName": "[concat(parameters('name'), 'staging')]",
                 "hostNameType": "Verified",
                 "customHostNameDnsRecordType": "CName"
             }
