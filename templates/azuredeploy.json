@@ -374,7 +374,8 @@
         "registryApiVersion": "2022-02-01-preview",
         "keyVaultApiVersion": "2022-02-01-preview",
         "tenantId": "[subscription().tenantId]",
-        "slotName": "staging"
+        "slotName": "staging",
+        "hostNameBindingName": "[replace(parameters('stagingDomainName'), '.', '_')]"
     },
     "resources": [
         {
@@ -635,7 +636,7 @@
         {
             "type": "Microsoft.Web/sites/slots/hostNameBindings",
             "apiVersion": "2024-04-01",
-            "name": "[format('{0}/{1}/{2}', parameters('name'), variables('slotName'), parameters('stagingDomainName'))]",
+            "name": "[format('{0}/{1}/{2}', parameters('name'), variables('slotName'), variables('hostNameBindingName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites/slots', parameters('name'), variables('slotName'))]"
