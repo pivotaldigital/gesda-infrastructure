@@ -477,7 +477,9 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]",
-                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "[resourceId('Microsoft.Web/sites/hostNameBindings', parameters('name'), parameters('domainName'))]"
+                
             ],
             "properties": {
                 "canonicalName": "[parameters('domainName')]",
@@ -494,7 +496,8 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
-                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "[resourceId('Microsoft.Web/sites/slots/hostNameBindings', parameters('name'), 'staging', parameters('stagingDomainName'))]"
             ],
             "properties": {
                 "canonicalName": "[parameters('stagingDomainName')]",
