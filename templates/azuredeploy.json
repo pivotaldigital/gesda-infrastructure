@@ -1050,7 +1050,7 @@
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "appGatewayBackendPool",
+                        "name": "webGatewayBackendPool",
                         "properties": {
                             "BackendAddresses": [
                                 {
@@ -1058,11 +1058,21 @@
                                 }
                             ]
                         }
+                    },
+                    {
+                        "name": "nextJsGatewayBackendPool",
+                        "properties": {
+                            "BackendAddresses": [
+                                {
+                                    "IpAddress": "[reference(parameters('nextJsAppName')).defaultHostName]"
+                                }
+                            ]
+                        }
                     }
                 ],
                 "backendHttpSettingsCollection": [
                     {
-                        "name": "appGatewayBackendHttpSettings",
+                        "name": "webGatewayBackendHttpSettings",
                         "properties": {
                             "Port": 443,
                             "Protocol": "Https",
@@ -1093,19 +1103,45 @@
                         }
                     }
                 ],
+                "urlPathMaps": [
+                    {
+                        "name": "weburlpathmap",
+                        "properties": {
+                            "defaultBackendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', variables('applicationGatewayName'), 'webGatewayBackendPool')]"
+                            },
+                            "defaultBackendHttpSettings": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', variables('applicationGatewayName'), 'webGatewayBackendHttpSettings')]"
+                            },
+                            "pathRules": [
+                                {
+                                    "name": "vision",
+                                    "properties": {
+                                        "paths": [
+                                            "/vision/*"
+                                        ],
+                                        "backendAddressPool": {
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', variables('applicationGatewayName'), 'nextJsGatewayBackendPool')]"
+                                        },
+                                        "backendHttpSettings": {
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', variables('applicationGatewayName'), 'webGatewayBackendHttpSettings')]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
                 "requestRoutingRules": [
                     {
-                        "Name": "rule1",
+                        "Name": "webpathrule",
                         "properties": {
-                            "RuleType": "Basic",
+                            "RuleType": "PathBasedRouting",
                             "httpListener": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/',variables('applicationGatewayName'), 'appGatewayHttpListener')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/', variables('applicationGatewayName'), 'appGatewayHttpListener')]"
                             },
-                            "backendAddressPool": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/',variables('applicationGatewayName'), 'appGatewayBackendPool')]"
-                            },
-                            "backendHttpSettings": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/',variables('applicationGatewayName'), 'appGatewayBackendHttpSettings')]"
+                            "urlPathMap": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/urlPathMaps/', variables('applicationGatewayName'), 'weburlpathmap')]"
                             }
                         }
                     }
@@ -1193,12 +1229,19 @@
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "appGatewayBackendPool",
+                        "name": "webGatewayBackendPool",
                         "properties": {
                             "BackendAddresses": [
                                 {
                                     "IpAddress": "[reference(resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')).defaultHostName]"
-                                },
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "nextJsGatewayBackendPool",
+                        "properties": {
+                            "BackendAddresses": [
                                 {
                                     "IpAddress": "[reference(resourceId('Microsoft.Web/sites/slots', parameters('nextJsAppName'), 'staging')).defaultHostName]"
                                 }
@@ -1208,7 +1251,7 @@
                 ],
                 "backendHttpSettingsCollection": [
                     {
-                        "name": "appGatewayBackendHttpSettings",
+                        "name": "webGatewayBackendHttpSettings",
                         "properties": {
                             "Port": 443,
                             "Protocol": "Https",
@@ -1242,27 +1285,25 @@
                 "urlPathMaps": [
                     {
                         "name": "weburlpathmap",
-                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), '/urlPathMaps/webpathrule')]",
                         "properties": {
                             "defaultBackendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), concat('/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), '1'))]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'webGatewayBackendPool')]"
                             },
                             "defaultBackendHttpSettings": {
-                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), '/backendHttpSettingsCollection/settings')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'webGatewayBackendHttpSettings')]"
                             },
                             "pathRules": [
                                 {
                                     "name": "vision",
-                                    "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), '/urlPathMaps/webpathrule/pathRules/vision')]",
                                     "properties": {
                                         "paths": [
                                             "/vision/*"
                                         ],
                                         "backendAddressPool": {
-                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendPool')]"
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'nextJsGatewayBackendPool')]"
                                         },
                                         "backendHttpSettings": {
-                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendHttpSettings')]"
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'webGatewayBackendHttpSettings')]"
                                         }
                                     }
                                 }
@@ -1280,12 +1321,6 @@
                             },
                             "urlPathMap": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/urlPathMaps/', format('{0}-staging', variables('applicationGatewayName')), 'weburlpathmap')]"
-                            },
-                            "backendAddressPool": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendPool')]"
-                            },
-                            "backendHttpSettings": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendHttpSettings')]"
                             }
                         }
                     }
