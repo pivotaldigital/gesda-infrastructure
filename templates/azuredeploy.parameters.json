@@ -8,6 +8,9 @@
         "name": {
             "value": "gesda"
         },
+        "nextJsAppName": {
+            "value": "gesda-vision"
+        },
         "location": {
             "value": "UK South"
         },
@@ -52,6 +55,12 @@
         },
         "dockerRegistryUrl": {
             "value": "https://mcr.microsoft.com"
+        },
+        "nextJsAppLinuxFxVersion": {
+            "value": "DOCKER|blueriver/nextjs:latest"
+        },
+        "nextJsAppDockerRegistryUrl": {
+            "value": "https://index.docker.io"
         },
         "storageSizeGB": {
             "value": 128
