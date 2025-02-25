@@ -12,7 +12,7 @@
         "name": {
             "type": "string",
             "minLength": 3,
-            "maxLength": 11,
+            "maxLength": 15,
             "metadata": {
                 "description": "Specify a project name that is used to generate resource names."
             }
@@ -20,7 +20,7 @@
         "nextJsAppName": {
             "type": "string",
             "minLength": 3,
-            "maxLength": 11,
+            "maxLength": 15,
             "metadata": {
                 "description": "Specify a project name that is used to generate resource names."
             }
