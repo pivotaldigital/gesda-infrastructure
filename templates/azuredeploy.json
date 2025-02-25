@@ -1050,7 +1050,7 @@
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "webApp",
+                        "name": "appGatewayBackendPool",
                         "properties": {
                             "BackendAddresses": [
                                 {
@@ -1058,21 +1058,11 @@
                                 }
                             ]
                         }
-                    },
-                    {
-                        "name": "nextJsApp",
-                        "properties": {
-                            "BackendAddresses": [
-                                {
-                                    "IpAddress": "[reference(parameters('nextJsAppName')).defaultHostName]"
-                                }
-                            ]
-                        }
                     }
                 ],
                 "backendHttpSettingsCollection": [
                     {
-                        "name": "webAppBackendHttpSettings",
+                        "name": "appGatewayBackendHttpSettings",
                         "properties": {
                             "Port": 443,
                             "Protocol": "Https",
@@ -1081,21 +1071,7 @@
                             "hostName": "[parameters('domainName')]",
                             "ProbeEnabled": true,
                             "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'WebProbe')]"
-                            }
-                        }
-                    },
-                    {
-                        "name": "nextJsBackendHttpSettings",
-                        "properties": {
-                            "Port": 443,
-                            "Protocol": "Https",
-                            "CookieBasedAffinity": "Disabled",
-                            "PickHostNameFromBackendAddress": true,
-                            "path": "/vision",
-                            "ProbeEnabled": true,
-                            "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'NextJsProbe')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'Probe1')]"
                             }
                         }
                     }
@@ -1126,17 +1102,17 @@
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/',variables('applicationGatewayName'), 'appGatewayHttpListener')]"
                             },
                             "backendAddressPool": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/',variables('applicationGatewayName'), 'webApp')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/',variables('applicationGatewayName'), 'appGatewayBackendPool')]"
                             },
                             "backendHttpSettings": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/',variables('applicationGatewayName'), 'webAppBackendHttpSettings')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/',variables('applicationGatewayName'), 'appGatewayBackendHttpSettings')]"
                             }
                         }
                     }
                 ],
                 "probes": [
                     {
-                        "Name": "WebProbe",
+                        "Name": "Probe1",
                         "properties": {
                             "Protocol": "Https",
                             "Path": "/",
@@ -1146,18 +1122,6 @@
                             "MinServers": 0,
                             "PickHostNameFromBackendHttpSettings": false,
                             "host": "[parameters('domainName')]"
-                        }
-                    },
-                    {
-                        "Name": "NextJsProbe",
-                        "properties": {
-                            "Protocol": "Https",
-                            "Path": "/vision",
-                            "Interval": 30,
-                            "Timeout": 10,
-                            "UnhealthyThreshold": 3,
-                            "MinServers": 0,
-                            "PickHostNameFromBackendHttpSettings": true
                         }
                     }
                 ]
@@ -1229,19 +1193,12 @@
                 ],
                 "backendAddressPools": [
                     {
-                        "name": "webApp",
+                        "name": "appGatewayBackendPool",
                         "properties": {
                             "BackendAddresses": [
                                 {
                                     "IpAddress": "[reference(resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')).defaultHostName]"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "nextJsApp",
-                        "properties": {
-                            "BackendAddresses": [
+                                },
                                 {
                                     "IpAddress": "[reference(resourceId('Microsoft.Web/sites/slots', parameters('nextJsAppName'), 'staging')).defaultHostName]"
                                 }
@@ -1251,7 +1208,7 @@
                 ],
                 "backendHttpSettingsCollection": [
                     {
-                        "name": "webAppBackendHttpSettings",
+                        "name": "appGatewayBackendHttpSettings",
                         "properties": {
                             "Port": 443,
                             "Protocol": "Https",
@@ -1260,21 +1217,7 @@
                             "hostName": "[parameters('stagingDomainName')]",
                             "ProbeEnabled": true,
                             "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'WebProbe')]"
-                            }
-                        }
-                    },
-                    {
-                        "name": "nextJsBackendHttpSettings",
-                        "properties": {
-                            "Port": 443,
-                            "Protocol": "Https",
-                            "CookieBasedAffinity": "Disabled",
-                            "PickHostNameFromBackendAddress": true,
-                            "path": "/vision",
-                            "ProbeEnabled": true,
-                            "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'NextJsProbe')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'Probe1')]"
                             }
                         }
                     }
@@ -1296,41 +1239,60 @@
                         }
                     }
                 ],
+                "urlPathMaps": [
+                    {
+                        "name": "weburlpathmap",
+                        "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), '/urlPathMaps/webpathrule')]",
+                        "properties": {
+                            "defaultBackendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), concat('/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), '1'))]"
+                            },
+                            "defaultBackendHttpSettings": {
+                                "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), '/backendHttpSettingsCollection/settings')]"
+                            },
+                            "pathRules": [
+                                {
+                                    "name": "vision",
+                                    "id": "[concat(resourceId('Microsoft.Network/applicationGateways', format('{0}-staging', variables('applicationGatewayName'))), '/urlPathMaps/webpathrule/pathRules/vision')]",
+                                    "properties": {
+                                        "paths": [
+                                            "/vision/*"
+                                        ],
+                                        "backendAddressPool": {
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendPool')]"
+                                        },
+                                        "backendHttpSettings": {
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendHttpSettings')]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
                 "requestRoutingRules": [
                     {
-                        "Name": "webRule",
+                        "Name": "webpathrule",
                         "properties": {
-                            "RuleType": "Basic",
+                            "RuleType": "PathBasedRouting",
                             "httpListener": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayHttpListener')]"
                             },
-                            "backendAddressPool": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'webApp')]"
-                            },
-                            "backendHttpSettings": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'webAppBackendHttpSettings')]"
-                            }
-                        }
-                    },
-                    {
-                        "Name": "nextJsRule",
-                        "properties": {
-                            "RuleType": "Basic",
-                            "httpListener": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/httpListeners/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayHttpListener')]"
+                            "urlPathMap": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/urlPathMaps/', format('{0}-staging', variables('applicationGatewayName')), 'weburlpathmap')]"
                             },
                             "backendAddressPool": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'nextJsApp')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendPool')]"
                             },
                             "backendHttpSettings": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'nextJsBackendHttpSettings')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'appGatewayBackendHttpSettings')]"
                             }
                         }
                     }
                 ],
                 "probes": [
                     {
-                        "Name": "WebProbe",
+                        "Name": "Probe1",
                         "properties": {
                             "Protocol": "Https",
                             "Path": "/",
@@ -1340,18 +1302,6 @@
                             "MinServers": 0,
                             "PickHostNameFromBackendHttpSettings": false,
                             "host": "[parameters('stagingDomainName')]"
-                        }
-                    },
-                    {
-                        "Name": "NextJsProbe",
-                        "properties": {
-                            "Protocol": "Https",
-                            "Path": "/vision",
-                            "Interval": 30,
-                            "Timeout": 10,
-                            "UnhealthyThreshold": 3,
-                            "MinServers": 0,
-                            "PickHostNameFromBackendHttpSettings": true
                         }
                     }
                 ]
