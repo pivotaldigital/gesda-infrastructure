@@ -1373,7 +1373,7 @@
             ]
         },
         {
-            "type": "Microsoft.ContainerRegistry/registries",
+            "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('rbacAuthApiVersion')]",
             "name": "[guid(resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName')), parameters('managedIdentityName'))]",
             "scope": "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName'))]",
