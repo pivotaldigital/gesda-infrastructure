@@ -1373,6 +1373,20 @@
             ]
         },
         {
+            "type": "Microsoft.ContainerRegistry/registries",
+            "apiVersion": "[variables('rbacAuthApiVersion')]",
+            "name": "[guid(resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName')), parameters('managedIdentityName'))]",
+            "scope": "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName'))]",
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', parameters('subscriptionId'), '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).principalId]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]",
+                "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registryName'))]"
+            ]
+        },
+        {
             "type": "Microsoft.Web/sites/config",
             "apiVersion": "[variables('appServicesApiVersion')]",
             "name": "[concat(parameters('name'), '/web')]",
