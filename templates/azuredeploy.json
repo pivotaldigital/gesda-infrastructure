@@ -1085,7 +1085,20 @@
                             "hostName": "[parameters('domainName')]",
                             "ProbeEnabled": true,
                             "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'Probe1')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'WPProbe')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "nextJsGatewayBackendHttpSettings",
+                        "properties": {
+                            "Port": 443,
+                            "Protocol": "Https",
+                            "CookieBasedAffinity": "Disabled",
+                            "PickHostNameFromBackendAddress": true,
+                            "ProbeEnabled": true,
+                            "Probe": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/',variables('applicationGatewayName'), 'NextJSProbe')]"
                             }
                         }
                     }
@@ -1128,7 +1141,7 @@
                                             "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', variables('applicationGatewayName'), 'nextJsGatewayBackendPool')]"
                                         },
                                         "backendHttpSettings": {
-                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', variables('applicationGatewayName'), 'webGatewayBackendHttpSettings')]"
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', variables('applicationGatewayName'), 'nextJsGatewayBackendHttpSettings')]"
                                         }
                                     }
                                 }
@@ -1152,7 +1165,7 @@
                 ],
                 "probes": [
                     {
-                        "Name": "Probe1",
+                        "Name": "WPProbe",
                         "properties": {
                             "Protocol": "Https",
                             "Path": "/",
@@ -1162,6 +1175,18 @@
                             "MinServers": 0,
                             "PickHostNameFromBackendHttpSettings": false,
                             "host": "[parameters('domainName')]"
+                        }
+                    },
+                    {
+                        "Name": "NextJSProbe",
+                        "properties": {
+                            "Protocol": "Https",
+                            "Path": "/",
+                            "Interval": 30,
+                            "Timeout": 10,
+                            "UnhealthyThreshold": 3,
+                            "MinServers": 0,
+                            "PickHostNameFromBackendHttpSettings": true
                         }
                     }
                 ]
@@ -1264,7 +1289,20 @@
                             "hostName": "[parameters('stagingDomainName')]",
                             "ProbeEnabled": true,
                             "Probe": {
-                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'Probe1')]"
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'WPProbe')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "nextJsGatewayBackendHttpSettings",
+                        "properties": {
+                            "Port": 443,
+                            "Protocol": "Https",
+                            "CookieBasedAffinity": "Disabled",
+                            "PickHostNameFromBackendAddress": true,
+                            "ProbeEnabled": true,
+                            "Probe": {
+                                "id": "[resourceId('Microsoft.Network/applicationGateways/probes/', format('{0}-staging', variables('applicationGatewayName')), 'NextJSProbe')]"
                             }
                         }
                     }
@@ -1307,7 +1345,7 @@
                                             "id": "[resourceId('Microsoft.Network/applicationGateways/backendAddressPools/', format('{0}-staging', variables('applicationGatewayName')), 'nextJsGatewayBackendPool')]"
                                         },
                                         "backendHttpSettings": {
-                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'webGatewayBackendHttpSettings')]"
+                                            "id": "[resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection/', format('{0}-staging', variables('applicationGatewayName')), 'nextJsGatewayBackendHttpSettings')]"
                                         }
                                     }
                                 }
@@ -1331,7 +1369,7 @@
                 ],
                 "probes": [
                     {
-                        "Name": "Probe1",
+                        "Name": "WPProbe",
                         "properties": {
                             "Protocol": "Https",
                             "Path": "/",
@@ -1341,6 +1379,18 @@
                             "MinServers": 0,
                             "PickHostNameFromBackendHttpSettings": false,
                             "host": "[parameters('stagingDomainName')]"
+                        }
+                    },
+                    {
+                        "Name": "NextJSProbe",
+                        "properties": {
+                            "Protocol": "Https",
+                            "Path": "/",
+                            "Interval": 30,
+                            "Timeout": 10,
+                            "UnhealthyThreshold": 3,
+                            "MinServers": 0,
+                            "PickHostNameFromBackendHttpSettings": true
                         }
                     }
                 ]
