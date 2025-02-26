@@ -800,15 +800,8 @@
             "properties": {
                 "name": "[parameters('nextJsAppName')]",
                 "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "DOCKER_REGISTRY_SERVER_URL",
-                            "value": "[parameters('nextJsAppDockerRegistryUrl')]"
-                        }
-                    ],
-                    "ftpsState": "[parameters('ftpsState')]",
+                    "ftpsState": "Disabled",
                     "alwaysOn": "[parameters('alwaysOn')]",
-                    "linuxFxVersion": "[parameters('nextJsAppLinuxFxVersion')]",
                     "acrUseManagedIdentityCreds": true,
                     "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
                 },
@@ -831,21 +824,14 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/Sites', parameters('nextJsAppName'))]"
             ],
-            "kind": "[parameters('kind')]",
+            "kind": "app,linux,container",
             "properties": {
                 "clientAffinityEnabled": false,
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
                 "virtualNetworkSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName'), '/subnets/', parameters('subnetForApp'))]",
                 "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "DOCKER_REGISTRY_SERVER_URL",
-                            "value": "[parameters('nextJsAppDockerRegistryUrl')]"
-                        }
-                    ],
-                    "ftpsState": "[parameters('ftpsState')]",
+                    "ftpsState": "Disabled",
                     "alwaysOn": "[parameters('alwaysOn')]",
-                    "linuxFxVersion": "[parameters('nextJsAppLinuxFxVersion')]",
                     "acrUseManagedIdentityCreds": true,
                     "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
                 }
