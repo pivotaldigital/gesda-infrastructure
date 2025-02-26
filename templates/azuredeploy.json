@@ -1159,7 +1159,8 @@
                             },
                             "urlPathMap": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/urlPathMaps/', variables('applicationGatewayName'), 'weburlpathmap')]"
-                            }
+                            },
+                            "priority": 10
                         }
                     }
                 ],
@@ -1363,7 +1364,8 @@
                             },
                             "urlPathMap": {
                                 "id": "[resourceId('Microsoft.Network/applicationGateways/urlPathMaps/', format('{0}-staging', variables('applicationGatewayName')), 'weburlpathmap')]"
-                            }
+                            },
+                            "priority": 10
                         }
                     }
                 ],
