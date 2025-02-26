@@ -23,4 +23,4 @@ steps:
     csmParametersFileLink: 'https://raw.githubusercontent.com/pivotaldigital/gesda-infrastructure/refs/heads/main/templates/azuredeploy.parameters.json'
     deploymentMode: 'Incremental'
     deploymentName: 'GESDAInfrastructureDeploymentPipeline'
-    
+    overrideParameters: '-nextJsAppDockerRegistryUrl https://gesdacr1.azurecr.io -nextJsAppLinuxFxVersion "gesdacr1.azurecr.io/gesda-nextjs:latest-production"'
