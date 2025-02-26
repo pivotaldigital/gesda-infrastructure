@@ -1168,7 +1168,7 @@
                         "Name": "NextJSProbe",
                         "properties": {
                             "Protocol": "Https",
-                            "Path": "/",
+                            "Path": "/vision",
                             "Interval": 30,
                             "Timeout": 10,
                             "UnhealthyThreshold": 3,
@@ -1373,7 +1373,7 @@
                         "Name": "NextJSProbe",
                         "properties": {
                             "Protocol": "Https",
-                            "Path": "/",
+                            "Path": "/vision",
                             "Interval": 30,
                             "Timeout": 10,
                             "UnhealthyThreshold": 3,
