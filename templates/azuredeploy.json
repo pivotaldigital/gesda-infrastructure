@@ -370,6 +370,7 @@
     },
     "variables": {
         "appServicesApiVersion": "2021-03-01",
+        "appGatewayApiVersion": "2024-05-01",
         "databaseApiVersion": "2021-12-01-preview",
         "databaseVersion": "8.0.21",
         "vnetDeploymentApiVersion": "2020-07-01",
@@ -991,7 +992,7 @@
             }
         },
         {
-            "apiVersion": "2020-05-01",
+            "apiVersion": "[variables('appGatewayApiVersion')]",
             "name": "[variables('applicationGatewayName')]",
             "type": "Microsoft.Network/applicationGateways",
             "location": "[parameters('location')]",
@@ -1197,7 +1198,7 @@
             }
         },
         {
-            "apiVersion": "2020-05-01",
+            "apiVersion": "[variables('appGatewayApiVersion')]",
             "name": "[concat(variables('applicationGatewayName'), '-staging')]",
             "type": "Microsoft.Network/applicationGateways",
             "location": "[parameters('location')]",
