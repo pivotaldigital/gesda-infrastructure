@@ -34,11 +34,11 @@
         },
         "hostingPlanName": {
             "type": "string",
-            "defaultValue": "ASP-gesdauk-a3be"
+            "defaultValue": "ASP-gesda-a3be"
         },
         "targetResourceGroup": {
             "type": "string",
-            "defaultValue": "gesda-uk"
+            "defaultValue": "gesda"
         },
         "ftpsState": {
             "type": "string",
@@ -623,7 +623,9 @@
                         }
                     ],
                     "ftpsState": "[parameters('ftpsState')]",
-                    "linuxFxVersion": "[parameters('linuxFxVersion')]"
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "acrUseManagedIdentityCreds": true,
+                    "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
                 },
                 "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
                 "clientAffinityEnabled": false,
@@ -748,7 +750,9 @@
                     ],
                     "ftpsState": "[parameters('ftpsState')]",
                     "alwaysOn": "[parameters('alwaysOn')]",
-                    "linuxFxVersion": "[parameters('linuxFxVersion')]"
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "acrUseManagedIdentityCreds": true,
+                    "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
                 }
             },
             "identity": {
@@ -998,8 +1002,9 @@
             ],
             "properties": {
                 "sku": {
-                    "name": "Standard_v2",
-                    "tier": "Standard_v2",
+                    "name": "Basic",
+                    "tier": "Basic",
+                    "family": "Generation_2",
                     "capacity": 2
                 },
                 "sslCertificates": [
@@ -1203,8 +1208,9 @@
             ],
             "properties": {
                 "sku": {
-                    "name": "Standard_v2",
-                    "tier": "Standard_v2",
+                    "name": "Basic",
+                    "tier": "Basic",
+                    "family": "Generation_2",
                     "capacity": 2
                 },
                 "sslCertificates": [
