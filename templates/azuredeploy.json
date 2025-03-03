@@ -550,11 +550,11 @@
                             "value": "true"
                         },
                         {
-                            "name": "DATABASE_HOST",
+                            "name": "DB_HOST",
                             "value": "[concat(parameters('serverName'),'.mysql.database.azure.com')]"
                         },
                         {
-                            "name": "DATABASE_NAME",
+                            "name": "DB_NAME",
                             "value": "[parameters('databaseName')]"
                         },
                         {
@@ -582,7 +582,7 @@
                             "value": "true"
                         },
                         {
-                            "name": "DATABASE_USERNAME",
+                            "name": "DB_USER",
                             "value": "[parameters('managedIdentityName')]"
                         },
                         {
@@ -604,6 +604,10 @@
                         {
                             "name": "STORAGE_ACCOUNT_KEY",
                             "value": "[listKeys(variables('storageAccountId'), '2019-04-01').keys[0].value]"
+                        },
+                        {
+                            "name": "WP_ENV",
+                            "value": "production"
                         }
                     ],
                     "connectionStrings": [
@@ -624,7 +628,6 @@
                         }
                     ],
                     "ftpsState": "[parameters('ftpsState')]",
-                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
                     "acrUseManagedIdentityCreds": true,
                     "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
                 },
@@ -668,11 +671,11 @@
                             "value": "true"
                         },
                         {
-                            "name": "DATABASE_HOST",
+                            "name": "DB_HOST",
                             "value": "[concat(parameters('serverName'),'.mysql.database.azure.com')]"
                         },
                         {
-                            "name": "DATABASE_NAME",
+                            "name": "DB_NAME",
                             "value": "[parameters('stagingDatabaseName')]"
                         },
                         {
@@ -700,7 +703,7 @@
                             "value": "true"
                         },
                         {
-                            "name": "DATABASE_USERNAME",
+                            "name": "DB_USER",
                             "value": "[parameters('managedIdentityName')]"
                         },
                         {
@@ -730,6 +733,10 @@
                         {
                             "name": "ENABLE_EMAIL_MANAGED_IDENTITY",
                             "value": "true"
+                        },
+                        {
+                            "name": "WP_ENV",
+                            "value": "staging"
                         }
                     ],
                     "connectionStrings": [
@@ -751,7 +758,6 @@
                     ],
                     "ftpsState": "[parameters('ftpsState')]",
                     "alwaysOn": "[parameters('alwaysOn')]",
-                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
                     "acrUseManagedIdentityCreds": true,
                     "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
                 }
@@ -1610,11 +1616,15 @@
                         "value": "true"
                     },
                     {
-                        "name": "DATABASE_HOST",
+                        "name": "DB_HOST",
                         "value": "[concat(parameters('serverName'),'.mysql.database.azure.com')]"
                     },
                     {
-                        "name": "DATABASE_NAME",
+                        "name": "DB_NAME",
+                        "value": "[parameters('databaseName')]"
+                    },
+                    {
+                        "name": "DB_PORT",
                         "value": "[parameters('databaseName')]"
                     },
                     {
@@ -1642,7 +1652,7 @@
                         "value": "true"
                     },
                     {
-                        "name": "DATABASE_USERNAME",
+                        "name": "DB_USER",
                         "value": "[parameters('managedIdentityName')]"
                     },
                     {
