@@ -12,13 +12,13 @@
             "value": "gesda-vision"
         },
         "location": {
-            "value": "UK South"
+            "value": "North Europe"
         },
         "hostingPlanName": {
-            "value": "ASP-gesdauk-a1be"
+            "value": "ASP-gesda-a1be"
         },
         "targetResourceGroup": {
-            "value": "gesda-uk"
+            "value": "gesda"
         },
         "ftpsState": {
             "value": "FtpsOnly"
@@ -96,7 +96,7 @@
             "value": "utf8_general_ci"
         },
         "serverName": {
-            "value": "gesda-bc8f815181-wpdbserver"
+            "value": "gesda-pv8f815181-wpdbserver"
         },
         "serverUsername": {
             "value": "mgxkminjkx"
@@ -105,13 +105,13 @@
             "value": "3uiYw9yozWHsSTeU"
         },
         "databaseName": {
-            "value": "gesda_bc8f815181_database"
+            "value": "gesda_pv8f815181_database"
         },
         "publicNetworkAccess": {
             "value": "Disabled"
         },
         "stagingDatabaseName": {
-            "value": "gesda_bc8f815181_database_staging"
+            "value": "gesda_pv8f815181_database_staging"
         },
         "wordpressAdminEmail": {
             "value": "ankit@elatebrain.com"
@@ -125,23 +125,11 @@
         "wpLocaleCode": {
             "value": "en_US"
         },
-        "cdnProfileName": {
-            "value": "gesda-bc8f815181-cdnprofile"
-        },
-        "cdnEndpointName": {
-            "value": "gesda-bc8f815181-endpoint"
-        },
-        "cdnType": {
-            "value": "Standard_Microsoft"
-        },
-        "stagingCdnEndpointName": {
-            "value": "gesda-bc8f815181-endpoint-staging"
-        },
         "storageAccountName": {
-            "value": "gesdabc8f815181"
+            "value": "gesdapv8f815181"
         },
         "blobContainerName": {
-            "value": "blobgesdabc8f815181"
+            "value": "blobgesdapv8f815181"
         },
         "storageAccountType": {
             "value": "Standard_RAGRS"
@@ -186,40 +174,40 @@
             "value": "blob"
         },
         "stagingBlobContainerName": {
-            "value": "blobgesdabc8f815181staging"
+            "value": "blobgesdapv8f815181staging"
         },
         "vnetName": {
-            "value": "gesda-bc8f815181-vnet"
+            "value": "gesda-pv8f815181-vnet"
         },
         "subnetForApp": {
-            "value": "gesda-bc8f815181-appsubnet"
+            "value": "gesda-pv8f815181-appsubnet"
         },
         "subnetForDb": {
-            "value": "gesda-bc8f815181-dbsubnet"
+            "value": "gesda-pv8f815181-dbsubnet"
         },
         "subnetForAg": {
-            "value": "gesda-bc8f815181-agsubnet"
+            "value": "gesda-pv8f815181-agsubnet"
         },
         "privateDnsZoneNameForDb": {
-            "value": "gesda-bc8f815181-privatelink.mysql.database.azure.com"
+            "value": "gesda-pv8f815181-privatelink.mysql.database.azure.com"
         },
         "emailDataLocation": {
             "value": "switzerland"
         },
         "emailCommServiceName": {
-            "value": "gesda-bc8f815181-emailacsendpoint"
+            "value": "gesda-pv8f815181-emailacsendpoint"
         },
         "commServiceName": {
-            "value": "gesda-bc8f815181-acsendpoint"
+            "value": "gesda-pv8f815181-acsendpoint"
         },
         "managedIdentityName": {
-            "value": "gesda-bc8f815181-wpidentity"
+            "value": "gesda-pv8f815181-wpidentity"
         },
         "registryName": {
-            "value": "GesdaCR1"
+            "value": "GesdaContainerRegistry"
         },
         "registryLocation": {
-            "value": "uksouth"
+            "value": "northeurope"
         },
         "zoneRedundancy": {
             "value": "disabled"
@@ -235,9 +223,6 @@
         },
         "kvSku": {
             "value": "Standard"
-        },
-        "kvAccessPolicies": {
-            "value": []
         },
         "kvEnabledForDeployment": {
             "value": true

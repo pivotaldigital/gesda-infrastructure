@@ -171,25 +171,9 @@
         "wpLocaleCode": {
             "type": "string"
         },
-        "cdnProfileName": {
-            "type": "string",
-            "defaultValue": "gesda-bc8f815181-cdnprofile"
-        },
-        "cdnEndpointName": {
-            "type": "string",
-            "defaultValue": "gesda-bc8f815181-endpoint"
-        },
-        "cdnType": {
-            "type": "string",
-            "defaultValue": "Standard_Microsoft"
-        },
-        "stagingCdnEndpointName": {
-            "type": "string",
-            "defaultValue": "gesda-bc8f815181-endpoint-staging"
-        },
         "storageAccountName": {
             "type": "string",
-            "defaultValue": "gesdabc8f815181"
+            "defaultValue": "gesdapv8f815181"
         },
         "storageAccountType": {
             "type": "string",
@@ -245,7 +229,7 @@
         },
         "blobContainerName": {
             "type": "string",
-            "defaultValue": "blobgesdabc8f815181"
+            "defaultValue": "blobgesdapv8f815181"
         },
         "blobPublicAccessLevel": {
             "type": "string",
@@ -253,31 +237,31 @@
         },
         "stagingBlobContainerName": {
             "type": "string",
-            "defaultValue": "blobgesdabc8f815181staging"
+            "defaultValue": "blobgesdapv8f815181staging"
         },
         "vnetName": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-vnet"
+            "defaultValue": "gesda-pv8f815181-vnet"
         },
         "subnetForApp": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-appsubnet"
+            "defaultValue": "gesda-pv8f815181-appsubnet"
         },
         "subnetForDb": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-dbsubnet"
+            "defaultValue": "gesda-pv8f815181-dbsubnet"
         },
         "subnetForAg": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-agsubnet"
+            "defaultValue": "gesda-pv8f815181-agsubnet"
         },
         "subnetForStageAg": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-stageagsubnet"
+            "defaultValue": "gesda-pv8f815181-stageagsubnet"
         },
         "privateDnsZoneNameForDb": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-privatelink.mysql.database.azure.com"
+            "defaultValue": "gesda-pv8f815181-privatelink.mysql.database.azure.com"
         },
         "emailDataLocation": {
             "type": "string",
@@ -285,15 +269,15 @@
         },
         "emailCommServiceName": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-emailacsendpoint"
+            "defaultValue": "gesda-pv8f815181-emailacsendpoint"
         },
         "commServiceName": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-acsendpoint"
+            "defaultValue": "gesda-pv8f815181-acsendpoint"
         },
         "managedIdentityName": {
             "type": "string",
-            "defaultValue": "gesda-bc8f815181-wpidentity"
+            "defaultValue": "gesda-pv8f815181-wpidentity"
         },
         "registryName": {
             "type": "string"
@@ -315,9 +299,6 @@
         },
         "kvSku": {
             "type": "string"
-        },
-        "kvAccessPolicies": {
-            "type": "array"
         },
         "kvEnabledForDeployment": {
             "type": "bool"
@@ -378,7 +359,6 @@
         "publicIPAddressName": "[concat(parameters('name'),'-pip')]",
         "applicationGatewayName": "[concat(parameters('name'),'-agw')]",
         "vnetAddress": "10.0.0.0/16",
-        "cdnApiVersion": "2020-04-15",
         "blobApiVersion": "2021-08-01",
         "storageAccountId": "[resourceId(parameters('targetResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
         "emailApiVersion": "2023-03-31",
@@ -389,10 +369,7 @@
         "rbacAuthApiVersion": "2022-04-01",
         "roleDefinitionsApiVersion": "2022-04-01",
         "registryApiVersion": "2022-02-01-preview",
-        "keyVaultApiVersion": "2022-02-01-preview",
-        "tenantId": "[subscription().tenantId]",
-        "slotName": "staging",
-        "hostNameBindingName": "[replace(parameters('stagingDomainName'), '.', '_')]"
+        "keyVaultApiVersion": "2022-02-01-preview"
     },
     "resources": [
         {
