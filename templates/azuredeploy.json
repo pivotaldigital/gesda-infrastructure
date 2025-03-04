@@ -555,7 +555,8 @@
                         },
                         {
                             "name": "DB_NAME",
-                            "value": "[parameters('databaseName')]"
+                            "value": "[parameters('databaseName')]",
+                            "slotSetting": true
                         },
                         {
                             "name": "WEBSITES_CONTAINER_START_TIME_LIMIT",
@@ -607,7 +608,18 @@
                         },
                         {
                             "name": "WP_ENV",
-                            "value": "production"
+                            "value": "production",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "WP_HOME",
+                            "value": "[concat('https://', parameters('domainName'))]",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "WP_SITEURL",
+                            "value": "[concat('https://', parameters('domainName'), '/wp')]",
+                            "slotSetting": true
                         }
                     ],
                     "connectionStrings": [
@@ -676,7 +688,8 @@
                         },
                         {
                             "name": "DB_NAME",
-                            "value": "[parameters('stagingDatabaseName')]"
+                            "value": "[parameters('stagingDatabaseName')]",
+                            "slotSetting": true
                         },
                         {
                             "name": "WEBSITES_CONTAINER_START_TIME_LIMIT",
@@ -736,7 +749,18 @@
                         },
                         {
                             "name": "WP_ENV",
-                            "value": "staging"
+                            "value": "staging",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "WP_HOME",
+                            "value": "[concat('https://', parameters('stagingDomainName'))]",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "WP_SITEURL",
+                            "value": "[concat('https://', parameters('stagingDomainName'), '/wp')]",
+                            "slotSetting": true
                         }
                     ],
                     "connectionStrings": [
@@ -1621,7 +1645,8 @@
                     },
                     {
                         "name": "DB_NAME",
-                        "value": "[parameters('databaseName')]"
+                        "value": "[parameters('databaseName')]",
+                        "slotSetting": true
                     },
                     {
                         "name": "DB_PORT",
@@ -1682,6 +1707,21 @@
                     {
                         "name": "ENABLE_EMAIL_MANAGED_IDENTITY",
                         "value": "true"
+                    },
+                    {
+                        "name": "WP_ENV",
+                        "value": "production",
+                        "slotSetting": true
+                    },
+                    {
+                        "name": "WP_HOME",
+                        "value": "[concat('https://', parameters('domainName'))]",
+                        "slotSetting": true
+                    },
+                    {
+                        "name": "WP_SITEURL",
+                        "value": "[concat('https://', parameters('domainName'), '/wp')]",
+                        "slotSetting": true
                     }
                 ]
             }
