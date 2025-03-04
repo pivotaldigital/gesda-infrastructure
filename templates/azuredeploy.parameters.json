@@ -219,7 +219,7 @@
             "value": "Enabled"
         },
         "kvName": {
-            "value": "gesda-kv"
+            "value": "gesda-keyvault"
         },
         "kvSku": {
             "value": "Standard"
