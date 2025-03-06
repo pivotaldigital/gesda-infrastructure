@@ -274,21 +274,12 @@
         "stagingDomainName": {
             "value": "gesda-stage.stagingview.com"
         },
-        "defaultOAuth": {
-            "value": false
-        },
-        "networkAclsIpRules": {
+        "imageStorageNetworkAclsIpRules": {
             "value": [
                 {
                     "value": "185.184.140.22"
                 }
             ]
-        },
-        "dnsEndpointType": {
-            "value": "Standard"
-        },
-        "largeFileSharesState": {
-            "value": "Enabled"
         },
         "imageStorageAccountType": {
             "value": "Standard_ZRS"
