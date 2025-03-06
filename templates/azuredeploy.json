@@ -1857,40 +1857,39 @@
             "apiVersion": "2023-05-01",
             "location": "[parameters('imageStorageLocation')]",
             "properties": {
-                "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
-                "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+                "minimumTlsVersion": "TLS1_2",
+                "supportsHttpsTrafficOnly": true,
                 "allowBlobPublicAccess": false,
                 "allowSharedKeyAccess": true,
-                "defaultToOAuthAuthentication": "[parameters('defaultOAuth')]",
-                "accessTier": "[parameters('accessTier')]",
+                "defaultToOAuthAuthentication": false,
+                "accessTier": "Hot",
                 "publicNetworkAccess": "Enabled",
                 "allowCrossTenantReplication": false,
                 "networkAcls": {
-                    "bypass": "[parameters('networkAclsBypass')]",
+                    "bypass": "AzureServices",
                     "defaultAction": "Deny",
-                    "ipRules": "[parameters('networkAclsIpRules')]",
                     "virtualNetworkRules": [
                         {
                             "id": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName'), '/subnets/', parameters('subnetForApp'))]"
                         }
                     ]
                 },
-                "dnsEndpointType": "[parameters('dnsEndpointType')]",
-                "largeFileSharesState": "[parameters('largeFileSharesState')]",
+                "dnsEndpointType": "Standard",
+                "largeFileSharesState": "Enabled",
                 "encryption": {
                     "keySource": "Microsoft.Storage",
                     "services": {
                         "blob": {
-                            "enabled": "[parameters('encryptionEnabled')]"
+                            "enabled": true
                         },
                         "file": {
-                            "enabled": "[parameters('encryptionEnabled')]"
+                            "enabled": true
                         },
                         "table": {
-                            "enabled": "[parameters('encryptionEnabled')]"
+                            "enabled": true
                         },
                         "queue": {
-                            "enabled": "[parameters('encryptionEnabled')]"
+                            "enabled": true
                         }
                     },
                     "requireInfrastructureEncryption": false
