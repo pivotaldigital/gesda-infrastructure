@@ -1852,10 +1852,10 @@
             }
         },
         {
-            "name": "[parameters('imageStorageAccountName')]",
+            "name": "gesdaimages",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2023-05-01",
-            "location": "North Europe",
+            "location": "northeurope",
             "properties": {
                 "minimumTlsVersion": "TLS1_2",
                 "supportsHttpsTrafficOnly": true,
@@ -1870,7 +1870,7 @@
                     "defaultAction": "Deny",
                     "virtualNetworkRules": [
                         {
-                            "id": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName'), '/subnets/', parameters('subnetForApp'))]"
+                            "id": "/subscriptions/afc6224a-3971-4916-87f5-10bc07ce8c99/resourceGroups/gesda/providers/Microsoft.Network/virtualNetworks/gesda-pv8f815181-vnet/subnets/gesda-pv8f815181-appsubnet"
                         }
                     ]
                 },
