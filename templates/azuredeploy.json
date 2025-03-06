@@ -815,7 +815,19 @@
                     "ftpsState": "Disabled",
                     "alwaysOn": "[parameters('alwaysOn')]",
                     "acrUseManagedIdentityCreds": true,
-                    "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
+                    "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]",
+                    "appSettings": [
+                        {
+                            "name": "JWT_SECRET",
+                            "value": "",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "API_KEY",
+                            "value": "",
+                            "slotSetting": true
+                        }
+                    ]
                 },
                 "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
                 "clientAffinityEnabled": false,
@@ -845,7 +857,19 @@
                     "ftpsState": "Disabled",
                     "alwaysOn": "[parameters('alwaysOn')]",
                     "acrUseManagedIdentityCreds": true,
-                    "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]"
+                    "acrUserManagedIdentityID": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).clientId]",
+                    "appSettings": [
+                        {
+                            "name": "JWT_SECRET",
+                            "value": "",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "API_KEY",
+                            "value": "",
+                            "slotSetting": true
+                        }
+                    ]
                 }
             },
             "identity": {
