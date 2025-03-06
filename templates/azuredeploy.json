@@ -1856,8 +1856,8 @@
             "properties": {
                 "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
                 "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
-                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]",
-                "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
+                "allowBlobPublicAccess": false,
+                "allowSharedKeyAccess": true,
                 "defaultToOAuthAuthentication": "[parameters('defaultOAuth')]",
                 "accessTier": "[parameters('accessTier')]",
                 "publicNetworkAccess": "Enabled",
@@ -1875,7 +1875,7 @@
                 "dnsEndpointType": "[parameters('dnsEndpointType')]",
                 "largeFileSharesState": "[parameters('largeFileSharesState')]",
                 "encryption": {
-                    "keySource": "[parameters('keySource')]",
+                    "keySource": "Microsoft.Storage",
                     "services": {
                         "blob": {
                             "enabled": "[parameters('encryptionEnabled')]"
