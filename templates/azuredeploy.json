@@ -368,6 +368,9 @@
         },
         "imageStorageKind": {
             "type": "string"
+        },
+        "imageStorageLocation": {
+            "type": "string"
         }
     },
     "variables": {
@@ -1852,7 +1855,7 @@
             "name": "[parameters('imageStorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2023-05-01",
-            "location": "[parameters('location')]",
+            "location": "[parameters('imageStorageLocation')]",
             "properties": {
                 "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
                 "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
