@@ -1855,7 +1855,7 @@
             "name": "[parameters('imageStorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2023-05-01",
-            "location": "[parameters('imageStorageLocation')]",
+            "location": "North Europe",
             "properties": {
                 "minimumTlsVersion": "TLS1_2",
                 "supportsHttpsTrafficOnly": true,
@@ -1899,10 +1899,9 @@
                 "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
             ],
             "sku": {
-                "name": "[parameters('imageStorageAccountType')]"
+                "name": "Standard_ZRS"
             },
-            "kind": "[parameters('imageStorageKind')]",
-            "tags": {}
+            "kind": "StorageV2"
         },
         {
             "name": "[concat(parameters('imageStorageAccountName'), '/default')]",
