@@ -295,6 +295,9 @@
         },
         "imageStorageAccountName": {
             "value": "gesdaimages"
+        },
+        "imageStorageKind": {
+            "value": "StorageV2"
         }
     }
 }

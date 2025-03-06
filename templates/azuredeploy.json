@@ -365,6 +365,9 @@
         },
         "imageStorageAccountName": {
             "type": "string"
+        },
+        "imageStorageKind": {
+            "type": "string"
         }
     },
     "variables": {
@@ -1896,7 +1899,7 @@
             "sku": {
                 "name": "[parameters('imageStorageAccountType')]"
             },
-            "kind": "[parameters('kind')]",
+            "kind": "[parameters('imageStorageKind')]",
             "tags": {}
         },
         {
