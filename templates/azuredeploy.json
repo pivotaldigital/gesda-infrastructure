@@ -347,6 +347,24 @@
         },
         "stagingDomainName": {
             "type": "string"
+        },
+        "defaultOAuth": {
+            "type": "bool"
+        },
+        "networkAclsIpRules": {
+            "type": "array"
+        },
+        "dnsEndpointType": {
+            "type": "string"
+        },
+        "largeFileSharesState": {
+            "type": "string"
+        },
+        "imageStorageAccountType": {
+            "type": "string"
+        },
+        "imageStorageAccountName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -1826,6 +1844,94 @@
                 "metadata": {},
                 "publicAccess": "[parameters('blobPublicAccessLevel')]"
             }
+        },
+        {
+            "name": "[parameters('imageStorageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-05-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "minimumTlsVersion": "[parameters('minimumTlsVersion')]",
+                "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]",
+                "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
+                "defaultToOAuthAuthentication": "[parameters('defaultOAuth')]",
+                "accessTier": "[parameters('accessTier')]",
+                "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
+                "allowCrossTenantReplication": "[parameters('allowCrossTenantReplication')]",
+                "networkAcls": {
+                    "bypass": "[parameters('networkAclsBypass')]",
+                    "defaultAction": "[parameters('networkAclsDefaultAction')]",
+                    "ipRules": "[parameters('networkAclsIpRules')]",
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.Network/virtualNetworks/', parameters('vnetName'), '/subnets/', parameters('subnetForApp'))]"
+                        }
+                    ]
+                },
+                "dnsEndpointType": "[parameters('dnsEndpointType')]",
+                "largeFileSharesState": "[parameters('largeFileSharesState')]",
+                "encryption": {
+                    "keySource": "[parameters('keySource')]",
+                    "services": {
+                        "blob": {
+                            "enabled": "[parameters('encryptionEnabled')]"
+                        },
+                        "file": {
+                            "enabled": "[parameters('encryptionEnabled')]"
+                        },
+                        "table": {
+                            "enabled": "[parameters('encryptionEnabled')]"
+                        },
+                        "queue": {
+                            "enabled": "[parameters('encryptionEnabled')]"
+                        }
+                    },
+                    "requireInfrastructureEncryption": false
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
+            ],
+            "sku": {
+                "name": "[parameters('imageStorageAccountType')]"
+            },
+            "kind": "[parameters('kind')]",
+            "tags": {}
+        },
+        {
+            "name": "[concat(parameters('imageStorageAccountName'), '/default')]",
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2023-05-01",
+            "properties": {
+                "deleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                },
+                "containerDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('imageStorageAccountName'))]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('imageStorageAccountName'), '/default')]",
+            "type": "Microsoft.Storage/storageAccounts/fileservices",
+            "apiVersion": "2023-05-01",
+            "properties": {
+                "protocolSettings": null,
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('imageStorageAccountName'))]",
+                "[concat(concat('Microsoft.Storage/storageAccounts/', parameters('imageStorageAccountName')), '/blobServices/default')]"
+            ]
         }
     ]
 }
