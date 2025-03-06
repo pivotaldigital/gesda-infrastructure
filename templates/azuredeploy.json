@@ -1483,6 +1483,14 @@
                                         "serviceName": "Microsoft.Web/serverFarms"
                                     }
                                 }
+                            ],
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "[resourceGroup().location]"
+                                    ]
+                                }
                             ]
                         }
                     },
@@ -1854,7 +1862,7 @@
         {
             "name": "gesdaimages",
             "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2023-05-01",
+            "apiVersion": "2024-01-01",
             "location": "northeurope",
             "properties": {
                 "minimumTlsVersion": "TLS1_2",
@@ -1863,7 +1871,7 @@
                 "allowSharedKeyAccess": true,
                 "defaultToOAuthAuthentication": false,
                 "accessTier": "Hot",
-                "publicNetworkAccess": "Enabled",
+                "publicNetworkAccess": "SecuredByPerimeter",
                 "allowCrossTenantReplication": false,
                 "networkAcls": {
                     "bypass": "AzureServices",
@@ -1906,7 +1914,7 @@
         {
             "name": "[concat(parameters('imageStorageAccountName'), '/default')]",
             "type": "Microsoft.Storage/storageAccounts/blobServices",
-            "apiVersion": "2023-05-01",
+            "apiVersion": "2024-01-01",
             "properties": {
                 "deleteRetentionPolicy": {
                     "enabled": true,
@@ -1924,7 +1932,7 @@
         {
             "name": "[concat(parameters('imageStorageAccountName'), '/default')]",
             "type": "Microsoft.Storage/storageAccounts/fileservices",
-            "apiVersion": "2023-05-01",
+            "apiVersion": "2024-01-01",
             "properties": {
                 "shareDeleteRetentionPolicy": {
                     "enabled": true,
