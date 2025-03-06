@@ -1861,7 +1861,7 @@
                 "allowSharedKeyAccess": true,
                 "defaultToOAuthAuthentication": false,
                 "accessTier": "Hot",
-                "publicNetworkAccess": "SecuredByPerimeter",
+                "publicNetworkAccess": "Enabled",
                 "allowCrossTenantReplication": false,
                 "networkAcls": {
                     "bypass": "AzureServices",
