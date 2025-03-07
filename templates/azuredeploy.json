@@ -1863,6 +1863,9 @@
                 "accessTier": "Hot",
                 "publicNetworkAccess": "Enabled",
                 "allowCrossTenantReplication": false,
+                "isHnsEnabled": true,
+                "isNfsV3Enabled": true,
+                "isSftpEnabled": true,
                 "networkAcls": {
                     "bypass": "AzureServices",
                     "defaultAction": "Deny",
