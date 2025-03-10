@@ -1076,7 +1076,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "keyVaultSecretId": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]"
+                            "keyVaultSecretId": "[format('https://{0}.vault.azure.net/secrets/{1}', parameters('kvName'), parameters('kvSecretName'))]"
                         }
                     }
                 ],
@@ -1290,7 +1290,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "keyVaultSecretId": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]"
+                            "keyVaultSecretId": "[format('https://{0}.vault.azure.net/secrets/{1}', parameters('kvName'), parameters('kvStagingSecretName'))]"
                         }
                     }
                 ],
