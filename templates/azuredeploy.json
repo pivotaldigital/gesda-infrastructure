@@ -413,7 +413,7 @@
                 "accessPolicies": [
                     {
                         "tenantId": "[subscription().tenantId]",
-                        "objectId": "182dc11c-5d0e-4fcc-8dd9-a7accff0d248",
+                        "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('managedIdentityApiVersion')).principalId]",
                         "permissions": {
                             "secrets": [
                                 "get",
@@ -430,7 +430,7 @@
                     },
                     {
                         "tenantId": "[subscription().tenantId]",
-                        "objectId": "bb9a7bd2-36da-4efa-9745-8a2420410f8f",
+                        "objectId": "d2953198-f923-496c-a19f-b382f961c677",
                         "permissions": {
                             "secrets": [
                                 "get",
@@ -455,7 +455,10 @@
                 "enableSoftDelete": "[parameters('kvEnableSoftDelete')]",
                 "softDeleteRetentionInDays": "[parameters('kvSoftDeleteRetentionInDays')]",
                 "networkAcls": "[parameters('kvNetworkAcls')]"
-            }
+            },
+            "dependsOn": [
+                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]"
+            ]
         },
         {
             "apiVersion": "[variables('keyVaultApiVersion')]",
@@ -465,7 +468,8 @@
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]"
             ],
             "properties": {
-                "value": "[parameters('kvSecretValue')]"
+                "value": "[parameters('kvSecretValue')]",
+                "recoveryLevel": "Purgeable"
             }
         },
         {
@@ -476,7 +480,8 @@
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]"
             ],
             "properties": {
-                "value": "[parameters('kvStagingSecretValue')]"
+                "value": "[parameters('kvStagingSecretValue')]",
+                "recoveryLevel": "Purgeable"
             }
         },
         {
@@ -1049,8 +1054,15 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
                 "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-                "[resourceId('Microsoft.Web/sites/', parameters('name'))]"
+                "[resourceId('Microsoft.Web/sites/', parameters('name'))]",
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]"
             ],
+            "identity": {
+                "type": "string",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]": {}
+                }
+            },
             "properties": {
                 "sku": {
                     "name": "Basic",
@@ -1062,7 +1074,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[parameters('kvSecretValue')]"
+                            "keyVaultSecretId": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]"
                         }
                     }
                 ],
@@ -1255,8 +1267,15 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]",
                 "[resourceId('Microsoft.Network/publicIPAddresses/', format('{0}-staging', variables('publicIPAddressName')))]",
-                "[resourceId('Microsoft.Web/sites/', parameters('name'))]"
+                "[resourceId('Microsoft.Web/sites/', parameters('name'))]",
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]"
             ],
+            "identity": {
+                "type": "string",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]": {}
+                }
+            },
             "properties": {
                 "sku": {
                     "name": "Basic",
@@ -1268,7 +1287,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[parameters('kvStagingSecretValue')]"
+                            "keyVaultSecretId": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]"
                         }
                     }
                 ],
