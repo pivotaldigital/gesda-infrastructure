@@ -1059,7 +1059,7 @@
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]"
             ],
             "identity": {
-                "type": "string",
+                "type": "UserAssigned",
                 "userAssignedIdentities": {
                     "[variables('identityID')]": {}
                 }
@@ -1272,7 +1272,7 @@
                 "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]"
             ],
             "identity": {
-                "type": "string",
+                "type": "UserAssigned",
                 "userAssignedIdentities": {
                     "[variables('identityID')]": {}
                 }
