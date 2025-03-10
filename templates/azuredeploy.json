@@ -1061,7 +1061,8 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[variables('identityID')]": {}
+                    "[variables('identityID')]": {
+                    }
                 }
             },
             "properties": {
@@ -1274,7 +1275,8 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[variables('identityID')]": {}
+                    "[variables('identityID')]": {
+                    }
                 }
             },
             "properties": {
