@@ -294,7 +294,7 @@
             "value": "northeurope"
         },
         "documentDBName": {
-            "value": "gesda-vision"
+            "value": "gesda-vision-db"
         },
         "documentDBLocation": {
             "value": "northeurope"
