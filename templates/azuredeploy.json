@@ -362,6 +362,15 @@
         },
         "imageStorageLocation": {
             "type": "string"
+        },
+        "documentDBName": {
+            "type": "string"
+        },
+        "documentDBLocation": {
+            "type": "string"
+        },
+        "documentDBLocationName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -1962,6 +1971,43 @@
                 "[concat('Microsoft.Storage/storageAccounts/', parameters('imageStorageAccountName'))]",
                 "[concat(concat('Microsoft.Storage/storageAccounts/', parameters('imageStorageAccountName')), '/blobServices/default')]"
             ]
+        },
+        {
+            "apiVersion": "2024-12-01-preview",
+            "kind": "GlobalDocumentDB",
+            "type": "Microsoft.DocumentDb/databaseAccounts",
+            "name": "[parameters('documentDBName')]",
+            "location": "[parameters('documentDBLocation')]",
+            "properties": {
+                "databaseAccountOfferType": "Standard",
+                "locations": [
+                    {
+                        "id": "[concat(parameters('documentDBName'), '-', parameters('documentDBLocation'))]",
+                        "failoverPriority": 0,
+                        "locationName": "[parameters('documentDBLocationName')]"
+                    }
+                ],
+                "backupPolicy": {
+                    "type": "Periodic",
+                    "periodicModeProperties": {
+                        "backupIntervalInMinutes": 240,
+                        "backupRetentionIntervalInHours": 8,
+                        "backupStorageRedundancy": "Geo"
+                    }
+                },
+                "isVirtualNetworkFilterEnabled": false,
+                "virtualNetworkRules": [],
+                "ipRules": [],
+                "dependsOn": [],
+                "minimalTlsVersion": "Tls12",
+                "enableMultipleWriteLocations": false,
+                "capabilities": [],
+                "capacityMode": "Provisioned",
+                "enableFreeTier": true,
+                "capacity": {
+                    "totalThroughputLimit": 1000
+                }
+            }
         }
     ]
 }

@@ -292,6 +292,15 @@
         },
         "imageStorageLocation": {
             "value": "northeurope"
-        }
+        },
+        "documentDBName": {
+            "value": "gesda-vision"
+        },
+        "documentDBLocation": {
+            "value": "northeurope"
+        },
+        "documentDBLocationName": {
+            "value": "North Europe"
+        },
     }
 }
