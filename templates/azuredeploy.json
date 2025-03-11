@@ -433,6 +433,7 @@
                             "certificates": [
                                 "get",
                                 "list",
+                                "update",
                                 "create",
                                 "import"
                             ]
@@ -440,7 +441,7 @@
                     },
                     {
                         "tenantId": "[subscription().tenantId]",
-                        "objectId": "d2953198-f923-496c-a19f-b382f961c677",
+                        "objectId": "c5743b80-4c74-482f-a0a1-bbbe915f14bf",
                         "permissions": {
                             "secrets": [
                                 "get",
@@ -450,6 +451,7 @@
                             "certificates": [
                                 "get",
                                 "list",
+                                "update",
                                 "create",
                                 "import"
                             ]

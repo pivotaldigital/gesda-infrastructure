@@ -272,7 +272,7 @@
             "value": "portal.gesda.global"
         },
         "stagingDomainName": {
-            "value": "portal-staging.gesda.global"
+            "value": "portal-stage.gesda.global"
         },
         "imageStorageNetworkAclsIpRules": {
             "value": [
