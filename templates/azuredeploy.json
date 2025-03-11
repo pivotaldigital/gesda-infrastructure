@@ -860,6 +860,21 @@
                             "name": "API_KEY",
                             "value": "",
                             "slotSetting": true
+                        },
+                        {
+                            "name": "COSMOSDB_CONNECTION_STRING",
+                            "value": "",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "COSMOSDB_DATABASE_NAME",
+                            "value": "",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "COSMOSDB_CONTAINER_NAME",
+                            "value": "",
+                            "slotSetting": true
                         }
                     ]
                 },
@@ -901,6 +916,21 @@
                         },
                         {
                             "name": "API_KEY",
+                            "value": "",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "COSMOSDB_CONNECTION_STRING",
+                            "value": "",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "COSMOSDB_DATABASE_NAME",
+                            "value": "",
+                            "slotSetting": true
+                        },
+                        {
+                            "name": "COSMOSDB_CONTAINER_NAME",
                             "value": "",
                             "slotSetting": true
                         }
@@ -1087,7 +1117,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "keyVaultSecretId": "[format('https://{0}.vault.azure.net/secrets/{1}', parameters('kvName'), parameters('kvSecretName'))]"
+                            "data": "[parameters('kvSecretName')]"
                         }
                     }
                 ],
@@ -1301,7 +1331,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "keyVaultSecretId": "[format('https://{0}.vault.azure.net/secrets/{1}', parameters('kvName'), parameters('kvStagingSecretName'))]"
+                            "data": "[parameters('kvStagingSecretName')]"
                         }
                     }
                 ],
