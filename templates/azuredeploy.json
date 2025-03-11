@@ -1117,7 +1117,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[parameters('kvSecretName')]"
+                            "data": "[parameters('kvSecretValue')]"
                         }
                     }
                 ],
@@ -1331,7 +1331,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[parameters('kvStagingSecretName')]"
+                            "data": "[parameters('kvStagingSecretValue')]"
                         }
                     }
                 ],
