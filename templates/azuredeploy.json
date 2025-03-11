@@ -1117,7 +1117,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[parameters('kvSecretValue')]"
+                            "keyVaultSecretId": "[format('https://{0}.vault.azure.net/secrets/{1}', parameters('kvName'), parameters('kvSecretName'))]"
                         }
                     }
                 ],
@@ -1331,7 +1331,7 @@
                     {
                         "name": "appGatewaySslCert",
                         "properties": {
-                            "data": "[parameters('kvStagingSecretValue')]"
+                            "keyVaultSecretId": "[format('https://{0}.vault.azure.net/secrets/{1}', parameters('kvName'), parameters('kvStagingSecretName'))]"
                         }
                     }
                 ],
