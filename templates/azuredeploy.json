@@ -497,43 +497,6 @@
             }
         },
         {
-            "type": "Microsoft.Web/certificates",
-            "name": "[parameters('certificateName')]",
-            "apiVersion": "2021-02-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]",
-                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-                "[resourceId('Microsoft.Web/sites/hostNameBindings', parameters('name'), parameters('domainName'))]"
-                
-            ],
-            "properties": {
-                "canonicalName": "[parameters('domainName')]",
-                "domainValidationMethod": "http-token",
-                "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]",
-                "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvSecretName'))]",
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-            }
-        },
-        {
-            "type": "Microsoft.Web/certificates",
-            "name": "[format('{0}-{1}', parameters('certificateName'), 'staging')]",
-            "apiVersion": "2021-02-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
-                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-                "[resourceId('Microsoft.Web/sites/slots/hostNameBindings', parameters('name'), 'staging', parameters('stagingDomainName'))]"
-            ],
-            "properties": {
-                "canonicalName": "[parameters('stagingDomainName')]",
-                "domainValidationMethod": "http-token",
-                "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('kvName'))]",
-                "keyVaultSecretName": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('kvName'), parameters('kvStagingSecretName'))]",
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-            }
-        },
-        {
             "apiVersion": "[variables('appServicesApiVersion')]",
             "name": "[parameters('name')]",
             "type": "Microsoft.Web/sites",
@@ -802,35 +765,6 @@
                 "UserAssignedIdentities": {
                     "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('targetResourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('managedIdentityName'))]": {}
                 }
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2021-03-01",
-            "name": "[format('{0}/{1}', parameters('name'), parameters('domainName'))]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('name'))]"
-            ],
-            "properties": {
-                "siteName": "[parameters('name')]",
-                "hostNameType": "Verified",
-                "customHostNameDnsRecordType": "CName"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/slots/hostNameBindings",
-            "apiVersion": "2021-03-01",
-            "name": "[concat(parameters('name'), '/staging/', parameters('stagingDomainName'))]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('name'))]",
-                "[resourceId('Microsoft.Web/sites/slots', parameters('name'), 'staging')]"
-            ],
-            "properties": {
-                "siteName": "[concat(parameters('name'), '/staging')]",
-                "hostNameType": "Verified",
-                "customHostNameDnsRecordType": "CName"
             }
         },
         {
@@ -1737,10 +1671,6 @@
                         "name": "DB_NAME",
                         "value": "[parameters('databaseName')]",
                         "slotSetting": true
-                    },
-                    {
-                        "name": "DB_PORT",
-                        "value": "[parameters('databaseName')]"
                     },
                     {
                         "name": "WEBSITES_CONTAINER_START_TIME_LIMIT",
